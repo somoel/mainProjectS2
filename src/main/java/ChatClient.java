@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 // Clase del Chat: Cliente.
 public class ChatClient extends JFrame implements ActionListener {
@@ -14,9 +16,24 @@ public class ChatClient extends JFrame implements ActionListener {
     public ChatClient() {
 
         setLayout(null);
-        String direccion = JOptionPane.showInputDialog("ingrese porfavor la ip");
+
+        String ip_local = "¡Error!";
+
+        try {
+            InetAddress ip_local_INET = InetAddress.getLocalHost();
+            ip_local = ip_local_INET.getHostAddress();
+
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        String direccion = JOptionPane.showInputDialog("Su IP es: " + ip_local + "\n\nIngrese la IP del servidor");
+
+
+
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Chat: Cliente ");
+        setTitle("Chat: Cliente");
         //contenido del label
         titleLabel = new JLabel("Bienvenido, cliente ", SwingConstants.CENTER);
         titleLabel.setBounds(10, 10, 410, 30);
