@@ -66,7 +66,7 @@ public class MainWindow extends JFrame implements ActionListener {
         if (event.getSource() == fiboButton) {
             setVisible(false);
 
-            FiboGUI fiboWindow = new FiboGUI();
+            FiboGUI fiboWindow = new FiboGUI(this);
             fiboWindow.setBounds(0, 0, 430, 500);
             fiboWindow.setVisible(true);
             fiboWindow.setLocationRelativeTo(null);
@@ -87,6 +87,11 @@ public class MainWindow extends JFrame implements ActionListener {
             ChatClientGUI.setLocationRelativeTo(null);
 
         }
+
+        // Botón Cerrar
+        if (event.getSource() == closeButton){
+            dispose();
+        }
     }
 
     // Creador de la Ventana
@@ -94,6 +99,7 @@ public class MainWindow extends JFrame implements ActionListener {
         MainWindow mwindow = new MainWindow();
         mwindow.setBounds(0, 0, 430, 600);
         mwindow.setVisible(true);
+        mwindow.setDefaultCloseOperation(EXIT_ON_CLOSE);
         mwindow.setLocationRelativeTo(null);
 
     }

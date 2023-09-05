@@ -9,38 +9,53 @@ public class FiboGUI extends JFrame implements ActionListener {
     // elementos de la ventana fibonacci
     private JLabel titleLabel, nLabel, resultLabel;
     private JTextField nField;
-    private JButton calcFiboButton;
+    private JButton calcFiboButton, backButton, closeButton;
 
     // Variable a contar
     private int n;
 
+    // Ventana anterior
+    private JFrame ventanaAnterior;
+
     // Constructor
-    public FiboGUI() {
+    public FiboGUI(JFrame ventanaAnterior) {
+        this.ventanaAnterior = ventanaAnterior;
+
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Programa Fibonacci");
         //contenido del label
         titleLabel = new JLabel("Números de Fibonacci", SwingConstants.CENTER);
-        titleLabel.setBounds(10, 10, 410, 30);
+        titleLabel.setBounds(10, 10, 400, 30);
         add(titleLabel);
 
-        nLabel = new JLabel("Ingrese la cantidad de números de la serie\n" +
-                "de Fibonacci que desea obtener");
-        nLabel.setBounds(10, 40, 410, 30);
+        nLabel = new JLabel("<html>Ingrese la cantidad de números de la serie<br>" +
+                "de Fibonacci que desea obtener</html>");
+        nLabel.setBounds(10, 40, 400, 30);
         add(nLabel);
 
         nField = new JTextField();
-        nField.setBounds(10, 70, 410, 30);
+        nField.setBounds(10, 70, 400, 30);
         add(nField);
 
         calcFiboButton = new JButton("Calcular");
-        calcFiboButton.setBounds(10, 100, 410, 30);
+        calcFiboButton.setBounds(10, 100, 400, 30);
         calcFiboButton.addActionListener(this);
         add(calcFiboButton);
 
         resultLabel = new JLabel("");
-        resultLabel.setBounds(10, 130, 410, 30);
+        resultLabel.setBounds(10, 130, 400, 30);
         add(resultLabel);
+
+        backButton = new JButton("Volver");
+        backButton.setBounds(10, 150, 195, 30);
+        backButton.addActionListener(this);
+        add(backButton);
+
+        closeButton = new JButton("Cerrar");
+        closeButton.setBounds(215, 150, 195, 30);
+        closeButton.addActionListener(this);
+        add(closeButton);
 
     }
 
@@ -89,6 +104,18 @@ public class FiboGUI extends JFrame implements ActionListener {
                     resultLabel.setText(Arrays.toString(arreglo));
             }
 
+        }
+
+        // Botón Volver
+        if (event.getSource() == backButton){
+            dispose();
+            ventanaAnterior.setVisible(true);
+        }
+
+        // Botón Cerrar
+        if (event.getSource() == closeButton){
+            dispose();
+            ventanaAnterior.dispose();
         }
     }
 
