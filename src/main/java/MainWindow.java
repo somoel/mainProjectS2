@@ -1,28 +1,34 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 // Clase principal de la ejecución
-public class MainWindow extends JFrame implements ActionListener{
+public class MainWindow extends JFrame implements ActionListener {
 
     // Elementos de la ventana
     private JLabel welcomeLabel, chatLabel;
     private JButton fiboButton, chatServerButton, chatClientButton, closeButton;
 
+    // Fuente usada en la ventana
+    public static Font mainFont = new Font("Open Sans", Font.PLAIN, 15);
+
     // Constructor de la ventana
-    public MainWindow(){
+    public MainWindow() {
+        // Configuración de la ventana
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Programa Principal");
 
-
-        welcomeLabel = new JLabel("Bienvenido de nuevo");
+        // Elementos de la ventana
+        welcomeLabel = new JLabel("Bienvenido de nuevo", SwingConstants.CENTER);
         welcomeLabel.setBounds(10, 10, 400, 50);
         add(welcomeLabel);
 
         fiboButton = new JButton("¿Fibonacci?");
         fiboButton.setBounds(10, 120, 400, 70);
         add(fiboButton);
+
 
         chatLabel = new JLabel("¿Ó el chat?");
         chatLabel.setBounds(10, 250, 400, 50);
@@ -40,11 +46,47 @@ public class MainWindow extends JFrame implements ActionListener{
         closeButton.setBounds(10, 490, 400, 70);
         add(closeButton);
 
+        // Formato a los componentes
+        JRootPane rootPane = this.getRootPane();
+        Container contentPane = rootPane.getContentPane();
+        for (Component c : contentPane.getComponents()) {
 
+            c.setFont(mainFont);
+
+            if (c instanceof JButton) {
+                ((JButton) c).addActionListener(this);
+            }
+        }
+
+        welcomeLabel.setFont(new Font("Open Sans", Font.BOLD, 30));
     }
 
-    public void actionPerformed(ActionEvent event){
+    public void actionPerformed(ActionEvent event) {
+        // Botón Fibonacci y llamada de la clase
+        if (event.getSource() == fiboButton) {
+            setVisible(false);
 
+            FiboGUI fiboWindow = new FiboGUI();
+            fiboWindow.setBounds(0, 0, 430, 500);
+            fiboWindow.setVisible(true);
+            fiboWindow.setLocationRelativeTo(null);
+        }
+
+        // Boton Chat Servidor
+        if (event.getSource() == chatServerButton) {
+
+
+        }
+
+        // Botón Chat Cliente
+        if (event.getSource() == chatClientButton) {
+            setVisible(false);
+            ChatClient ChatClientGUI = new ChatClient();
+            ChatClientGUI.setBounds(0, 0, 430, 500);
+            ChatClientGUI.setVisible(true);
+            ChatClientGUI.setLocationRelativeTo(null);
+
+        }
     }
 
     // Creador de la Ventana
@@ -53,5 +95,6 @@ public class MainWindow extends JFrame implements ActionListener{
         mwindow.setBounds(0, 0, 430, 600);
         mwindow.setVisible(true);
         mwindow.setLocationRelativeTo(null);
+
     }
 }
