@@ -48,7 +48,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         add(textField);
 
         sendButton = new JButton("Enviar");
-        sendButton.setBounds(10, 120, 100, 20);
+        sendButton.setBounds(310, 120, 100, 20);
         sendButton.addActionListener(this);
         add(sendButton);
 

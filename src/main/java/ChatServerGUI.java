@@ -39,6 +39,14 @@ public class ChatServerGUI extends JFrame implements ActionListener {
             throw new RuntimeException(e);
         }
 
+        try {
+            serverSocket = new ServerSocket(port);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        JOptionPane.showMessageDialog(null, ip_local);
+
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Chat: Servidor");
 
@@ -64,14 +72,12 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         add(textField);
 
         sendButton = new JButton("Enviar");
-        sendButton.setBounds(10, 160, 100, 20);
+        sendButton.setBounds(310, 160, 100, 20);
         sendButton.addActionListener(this);
         add(sendButton);
 
 
         try {
-            serverSocket = new ServerSocket(port);
-
             while (true){
                 socket = serverSocket.accept();
                 ipClientLabel.setText("Cliente conectado desde: " + socket.getInetAddress());
