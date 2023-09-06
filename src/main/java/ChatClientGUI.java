@@ -13,17 +13,19 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     private String output_message;
     private PrintWriter output;
     private Socket socket;
+    private BufferedReader input;
 
     // Constructor
     public ChatClientGUI() {
         setLayout(null);
 
         int port = 6969;
-        String serverIP = JOptionPane.showInputDialog("Ingrese la IP del servidor"); // IP del servidor predefinida
+        String serverIP = "127.0.0.1"; // IP del servidor predefinida
 
         try {
             socket = new Socket(serverIP, port);
             output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al conectar al servidor: " + e.getMessage());
@@ -42,7 +44,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         add(ipLabel);
 
         serverMessageLabel = new JLabel("Ningún mensaje por ahora.");
-        serverMessageLabel.setBounds(10, 90, 400, 30);
+        serverMessageLabel.setBounds(10, 70, 400, 30);
         add(serverMessageLabel);
 
         textField = new JTextField();
@@ -53,6 +55,26 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         sendButton.setBounds(310, 120, 100, 20);
         sendButton.addActionListener(this);
         add(sendButton);
+
+        // Iniciar el hilo para recibir mensajes del servidor
+        Thread recibirMensajes = new Thread(() -> {
+            try {
+                String server_message;
+                while ((server_message = input.readLine()) != null) {
+                    mostrarMensajeServidor(server_message);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        recibirMensajes.start();
+    }
+
+    // Método para mostrar los mensajes del servidor en la interfaz
+    private void mostrarMensajeServidor(String mensaje) {
+        SwingUtilities.invokeLater(() -> {
+            serverMessageLabel.setText("Servidor dice: " + mensaje);
+        });
     }
 
     // Método del botón
