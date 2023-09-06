@@ -1,41 +1,30 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.io.*;
 import java.net.*;
 
-// Clase del Chat: Cliente.
 public class ChatClientGUI extends JFrame implements ActionListener {
 
-    // elementos de la ventana del cliente
+    // Elementos de la ventana del cliente
     private JLabel titleLabel, ipServerLabel, serverMessageLabel;
     private JTextField textField;
     private JButton sendButton;
     private String output_message;
     private PrintWriter output;
+    private Socket socket;
 
-    // Constructor con un InputDialog dentro
+    // Constructor
     public ChatClientGUI() {
-        Socket socket;
-        BufferedReader input;
-        String host = "";
-        int port = 6969;
-
-        host = JOptionPane.showInputDialog("Ingrese la IP del Servidor");
-
-
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Chat: Cliente");
 
-        //contenido del label
         titleLabel = new JLabel("Bienvenido, cliente", SwingConstants.CENTER);
         titleLabel.setBounds(10, 10, 400, 30);
         add(titleLabel);
 
-        ipServerLabel = new JLabel("Está conectado al servidor " + host);
+        ipServerLabel = new JLabel("No está conectado al servidor.");
         ipServerLabel.setBounds(10, 40, 400, 30);
         add(ipServerLabel);
 
@@ -47,52 +36,45 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         textField.setBounds(10, 120, 300, 20);
         add(textField);
 
-        sendButton = new JButton("Enviar");
-        sendButton.setBounds(310, 120, 100, 20);
+        sendButton = new JButton("Conectar y Enviar");
+        sendButton.setBounds(310, 120, 150, 20);
         sendButton.addActionListener(this);
         add(sendButton);
+    }
 
-
+    // Método para establecer la conexión con el servidor
+    private void conectarAServidor(String host, int port) {
         try {
-            while (true) {
-                socket = new Socket(host, port);
-                input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
-                String input_message;
-
-                serverMessageLabel.setText("El servidor dice: " + input.readLine());
-
-                /*
-                while ((input_message = input.readLine()) != null) {
-                    serverMessageLabel.setText("El servidor dice: " + input_message);
-                }
-
-                 */
-
-                ipServerLabel.setText("Servidor desconectado.");
-                socket.close();
-            }
-
-
-
-        } catch (IOException e){
+            socket = new Socket(host, port);
+            output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+            ipServerLabel.setText("Conectado al servidor " + host);
+            serverMessageLabel.setText("El servidor dice: Conectado al servidor.");
+        } catch (IOException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al conectar al servidor: " + e.getMessage());
         }
-
-
-
-
-
-
     }
 
-    // Método del Botón
+    // Método del botón
     public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == sendButton){
-            output_message = textField.getText();
-            output.println(output_message);
-            textField.setText("");
+        if (event.getSource() == sendButton) {
+            String host = JOptionPane.showInputDialog("Ingrese la IP del Servidor");
+            int port = 6969;
+            conectarAServidor(host, port);
+
+            if (socket != null && output != null) {
+                output_message = textField.getText();
+                output.println(output_message);
+                textField.setText("");
+            }
         }
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            ChatClientGUI clientGUI = new ChatClientGUI();
+            clientGUI.setBounds(0, 0, 480, 240);
+            clientGUI.setVisible(true);
+        });
+    }
 }

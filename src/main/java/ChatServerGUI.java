@@ -2,42 +2,26 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 
-
-// Clase del Chat: server
 public class ChatServerGUI extends JFrame implements ActionListener {
 
-    // elementos de la ventana del cliente
-    private JLabel titleLabel, ipLabel, ipClientLabel, clientMessageLabel;
+    // Elementos de la ventana del servidor
+    private JLabel titleLabel, ipLabel, clientMessageLabel;
     private JTextField textField;
     private JButton sendButton;
     private String output_message;
     private PrintWriter output;
 
+    private ServerSocket serverSocket;
+    private Socket socket;
+    private BufferedReader input;
 
-    // Constructor con un InputDialog dentro
+    // Constructor
     public ChatServerGUI() {
-
         setLayout(null);
-//importacion del socket
-        ServerSocket serverSocket;
-        Socket socket;
+
         int port = 6969;
-        BufferedReader input;
-
-        String ip_local = "¡Error!";
-
-        try {
-            InetAddress ip_local_INET = InetAddress.getLocalHost();
-            ip_local = ip_local_INET.getHostAddress();
-
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
 
         try {
             serverSocket = new ServerSocket(port);
@@ -45,26 +29,20 @@ public class ChatServerGUI extends JFrame implements ActionListener {
             throw new RuntimeException(e);
         }
 
-        JOptionPane.showMessageDialog(null, ip_local);
-
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Chat: Servidor");
 
-        //contenido del label
-        titleLabel = new JLabel("Bienvenido, servidor ", SwingConstants.CENTER);
+        // Contenido del label
+        titleLabel = new JLabel("Bienvenido, servidor", SwingConstants.CENTER);
         titleLabel.setBounds(10, 10, 410, 30);
         add(titleLabel);
 
-        ipLabel = new JLabel("IP del Servidor: " + ip_local);
+        ipLabel = new JLabel("IP del Servidor: " + obtenerIPLocal());
         ipLabel.setBounds(10, 40, 400, 30);
         add(ipLabel);
 
-        ipClientLabel = new JLabel("Cliente sin conectar");
-        ipClientLabel.setBounds(10, 70, 400, 30);
-        add(ipClientLabel);
-
         clientMessageLabel = new JLabel("Ningún mensaje por ahora");
-        clientMessageLabel.setBounds(10, 100, 400, 30);
+        clientMessageLabel.setBounds(10, 70, 400, 30);
         add(clientMessageLabel);
 
         textField = new JTextField();
@@ -76,43 +54,65 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         sendButton.addActionListener(this);
         add(sendButton);
 
-
-        try {
-            while (true){
-                socket = serverSocket.accept();
-                ipClientLabel.setText("Cliente conectado desde: " + socket.getInetAddress());
-                input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
-                String input_message;
-
-                clientMessageLabel.setText("El cliente dice: " + input.readLine());
-
-                /*
-                while ((input_message = input.readLine()) != null) {
-                    clientMessageLabel.setText("El cliente dice: " + input_message);
-                }}
-
-                 */
-
-                ipClientLabel.setText("Cliente desconectado. Esperando un nuevo cliente");
-                socket.close();
-            }
-
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-
+        establecerConexionConCliente();
     }
 
-    // Método del Botón
+    // Método para obtener la IP local del servidor
+    private String obtenerIPLocal() {
+        try {
+            InetAddress ipLocal = InetAddress.getLocalHost();
+            return ipLocal.getHostAddress();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Método para establecer la conexión con el cliente
+    private void establecerConexionConCliente() {
+        try {
+            socket = serverSocket.accept();
+            clientMessageLabel.setText("Cliente conectado desde: " + socket.getInetAddress());
+            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+
+            // Inicia un hilo para escuchar y mostrar los mensajes del cliente en tiempo real
+            Thread escucharCliente = new Thread(() -> {
+                String input_message;
+                try {
+                    while ((input_message = input.readLine()) != null) {
+                        mostrarMensajeCliente(input_message);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+            escucharCliente.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para mostrar los mensajes del cliente en la interfaz
+    private void mostrarMensajeCliente(String mensaje) {
+        SwingUtilities.invokeLater(() -> {
+            clientMessageLabel.setText("El cliente dice: " + mensaje);
+        });
+    }
+
+    // Método del botón
     public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == sendButton){
+        if (event.getSource() == sendButton) {
             output_message = textField.getText();
             output.println(output_message);
             textField.setText("");
         }
     }
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            ChatServerGUI serverGUI = new ChatServerGUI();
+            serverGUI.setBounds(0, 0, 480, 240);
+            serverGUI.setVisible(true);
+        });
+    }
 }
-
-
