@@ -20,7 +20,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         setLayout(null);
 
         int port = 6969;
-        String serverIP = "127.0.0.1"; // IP del servidor predefinida
+        String serverIP = JOptionPane.showInputDialog("Ingrese la IP"); // IP del servidor predefinida
 
         try {
             socket = new Socket(serverIP, port);
