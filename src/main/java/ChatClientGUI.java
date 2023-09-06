@@ -60,9 +60,14 @@ public class ChatClientGUI extends JFrame implements ActionListener {
                 output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
                 String input_message;
 
+                serverMessageLabel.setText("El servidor dice: " + input.readLine());
+
+                /*
                 while ((input_message = input.readLine()) != null) {
                     serverMessageLabel.setText("El servidor dice: " + input_message);
                 }
+
+                 */
 
                 ipServerLabel.setText("Servidor desconectado.");
                 socket.close();

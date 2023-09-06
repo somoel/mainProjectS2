@@ -85,10 +85,14 @@ public class ChatServerGUI extends JFrame implements ActionListener {
                 output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
                 String input_message;
 
+                clientMessageLabel.setText("El cliente dice: " + input.readLine());
 
+                /*
                 while ((input_message = input.readLine()) != null) {
                     clientMessageLabel.setText("El cliente dice: " + input_message);
-                }
+                }}
+
+                 */
 
                 ipClientLabel.setText("Cliente desconectado. Esperando un nuevo cliente");
                 socket.close();
