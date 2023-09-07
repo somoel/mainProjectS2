@@ -61,8 +61,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String server_message;
                 while ((server_message = input.readLine()) != null) {
-                    final String finalServerMessage = server_message; // Capturar el mensaje en una variable final
-                    SwingUtilities.invokeLater(() -> showServerMessages(finalServerMessage));
+                    showServerMessages(server_message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
