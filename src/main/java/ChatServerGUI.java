@@ -24,7 +24,7 @@ public class ChatServerGUI extends JFrame implements ActionListener {
     public ChatServerGUI() {
         setLayout(null);
 
-        int port = 8081;
+        int port = 6969;
 
         try {
             serverSocket = new ServerSocket(port);
