@@ -112,9 +112,6 @@ public class ChatServerGUI extends JFrame implements ActionListener {
             String output_message1 = textField.getText();
             // sendMessagesToClient(output_message); // Enviar mensaje al cliente
             output.println(output_message1);
-            output.println("este sí envió");
-            System.out.println(output_message1);
-            System.out.println("este sí envió");
             textField.setText("");
         }
     }
