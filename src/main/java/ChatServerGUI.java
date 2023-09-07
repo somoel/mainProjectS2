@@ -13,11 +13,10 @@ public class ChatServerGUI extends JFrame implements ActionListener {
     private JLabel titleLabel, ipLabel, clientMessageLabel, messageFromClientLabel;
     private JTextField textField;
     private JButton sendButton;
-    // private String  output_message;
     private PrintWriter output;
 
     private ServerSocket serverSocket;
-    private Socket clientSocket; // Variable para almacenar la conexión del cliente
+    private Socket clientSocket;
     private BufferedReader input;
 
     // Constructor
@@ -90,27 +89,10 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         }
     }
 
-    // Método para mostrar los mensajes del cliente en la interfaz
-    /*
-    private void showClientMessages(String message) {
-        SwingUtilities.invokeLater(() -> messageFromClientLabel.setText("El cliente dice: " + message));
-    }
-
-     */
-
-    // Método para enviar mensajes al cliente
-    /*
-    private void sendMessagesToClient(String message) {
-        output.println(message);
-    }
-
-
-     */
     // Método del botón
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == sendButton) {
             String output_message1 = textField.getText();
-            // sendMessagesToClient(output_message); // Enviar mensaje al cliente
             output.println(output_message1);
             textField.setText("");
         }

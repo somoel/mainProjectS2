@@ -70,8 +70,6 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         receiveMessages.start();
     }
 
-    // Método para mostrar los mensajes del servidor en la interfaz
-
     // Método del botón
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == sendButton) {
