@@ -61,7 +61,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
                 input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String server_message;
                 while ((server_message = input.readLine()) != null) {
-                    showServerMessages(server_message);
+                    serverMessageLabel.setText(server_message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -71,9 +71,12 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     }
 
     // Método para mostrar los mensajes del servidor en la interfaz
+    /*
     private void showServerMessages(String message) {
         serverMessageLabel.setText("Servidor dice: " + message);
     }
+
+     */
 
     // Método del botón
     public void actionPerformed(ActionEvent event) {
