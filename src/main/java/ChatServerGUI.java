@@ -67,7 +67,7 @@ public class ChatServerGUI extends JFrame implements ActionListener {
                 clientSocket = serverSocket.accept();
                 clientMessageLabel.setText("Cliente conectado desde: " + clientSocket.getInetAddress());
                 input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                output = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+                output = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()), true);
 
                 String input_message;
                 while ((input_message = input.readLine()) != null) {
