@@ -25,7 +25,6 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         try {
             socket = new Socket(serverIP, port);
             output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
-            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al conectar al servidor: " + e.getMessage());
@@ -57,24 +56,24 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         add(sendButton);
 
         // Iniciar el hilo para recibir mensajes del servidor
-        Thread recibirMensajes = new Thread(() -> {
+        Thread receiveMessages = new Thread(() -> {
             try {
+                input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 String server_message;
                 while ((server_message = input.readLine()) != null) {
-                    mostrarMensajeServidor(server_message);
+                    final String finalServerMessage = server_message; // Capturar el mensaje en una variable final
+                    SwingUtilities.invokeLater(() -> showServerMessages(finalServerMessage));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-        recibirMensajes.start();
+        receiveMessages.start();
     }
 
     // Método para mostrar los mensajes del servidor en la interfaz
-    private void mostrarMensajeServidor(String mensaje) {
-        SwingUtilities.invokeLater(() -> {
-            serverMessageLabel.setText("Servidor dice: " + mensaje);
-        });
+    private void showServerMessages(String message) {
+        serverMessageLabel.setText("Servidor dice: " + message);
     }
 
     // Método del botón

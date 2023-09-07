@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 public class ChatServerGUI extends JFrame implements ActionListener {
 
     // Elementos de la ventana del servidor
-    private JLabel titleLabel, ipLabel, clientMessageLabel;
+    private JLabel titleLabel, ipLabel, clientMessageLabel, messageFromClientLabel;
     private JTextField textField;
     private JButton sendButton;
     private String output_message;
@@ -40,13 +40,17 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         titleLabel.setBounds(10, 10, 410, 30);
         add(titleLabel);
 
-        ipLabel = new JLabel("IP del Servidor: " + obtenerIPLocal());
+        ipLabel = new JLabel("IP del Servidor: " + getLocalIP());
         ipLabel.setBounds(10, 40, 400, 30);
         add(ipLabel);
 
-        clientMessageLabel = new JLabel("Ningún mensaje por ahora");
+        clientMessageLabel = new JLabel("EL cliente no se ha conectado.");
         clientMessageLabel.setBounds(10, 70, 400, 30);
         add(clientMessageLabel);
+
+        messageFromClientLabel = new JLabel("No existe ningún mensaje del cliente.");
+        messageFromClientLabel.setBounds(10,100, 400, 30);
+        add(messageFromClientLabel);
 
         textField = new JTextField();
         textField.setBounds(10, 160, 300, 20);
@@ -58,25 +62,26 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         add(sendButton);
 
         // Iniciar el hilo para escuchar al cliente
-        Thread escucharCliente = new Thread(() -> {
+        Thread receiveMessages = new Thread(() -> {
             try {
                 clientSocket = serverSocket.accept();
                 clientMessageLabel.setText("Cliente conectado desde: " + clientSocket.getInetAddress());
                 input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                output = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 
                 String input_message;
                 while ((input_message = input.readLine()) != null) {
-                    mostrarMensajeCliente(input_message);
+                    showClientMessages(input_message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
-        escucharCliente.start();
+        receiveMessages.start();
     }
 
     // Método para obtener la IP local del servidor
-    private String obtenerIPLocal() {
+    private String getLocalIP() {
         try {
             InetAddress ipLocal = InetAddress.getLocalHost();
             return ipLocal.getHostAddress();
@@ -86,24 +91,20 @@ public class ChatServerGUI extends JFrame implements ActionListener {
     }
 
     // Método para mostrar los mensajes del cliente en la interfaz
-    private void mostrarMensajeCliente(String mensaje) {
-        SwingUtilities.invokeLater(() -> {
-            clientMessageLabel.setText("El cliente dice: " + mensaje);
-        });
+    private void showClientMessages(String message) {
+        SwingUtilities.invokeLater(() -> messageFromClientLabel.setText("El cliente dice: " + message));
     }
 
     // Método para enviar mensajes al cliente
-    private void enviarMensajeAlCliente(String mensaje) {
-        if (clientSocket != null && output != null) {
-            output.println(mensaje);
-        }
+    private void sendMessagesToClient(String message) {
+        output.println(message);
     }
 
     // Método del botón
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == sendButton) {
             output_message = textField.getText();
-            enviarMensajeAlCliente(output_message); // Enviar mensaje al cliente
+            sendMessagesToClient(output_message); // Enviar mensaje al cliente
             textField.setText("");
         }
     }
