@@ -71,12 +71,6 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     }
 
     // Método para mostrar los mensajes del servidor en la interfaz
-    /*
-    private void showServerMessages(String message) {
-        serverMessageLabel.setText("Servidor dice: " + message);
-    }
-
-     */
 
     // Método del botón
     public void actionPerformed(ActionEvent event) {
@@ -90,7 +84,8 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             ChatClientGUI clientGUI = new ChatClientGUI();
-            clientGUI.setBounds(0, 0, 480, 240);
+            clientGUI.setBounds(0, 0, 430, 500);
+            clientGUI.setLocationRelativeTo(null);
             clientGUI.setVisible(true);
         });
     }

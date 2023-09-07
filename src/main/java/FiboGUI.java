@@ -109,14 +109,32 @@ public class FiboGUI extends JFrame implements ActionListener {
         // Botón Volver
         if (event.getSource() == backButton){
             dispose();
-            ventanaAnterior.setVisible(true);
+            try {
+                ventanaAnterior.setVisible(true);
+            } catch (java.lang.NullPointerException ignored) {
+
+            }
         }
 
         // Botón Cerrar
         if (event.getSource() == closeButton){
             dispose();
-            ventanaAnterior.dispose();
+            try {
+                ventanaAnterior.dispose();
+            } catch (java.lang.NullPointerException ignored) {
+            }
         }
+    }
+
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            FiboGUI fibo = new FiboGUI(null);
+
+            fibo.setBounds(0, 0, 430, 500);
+            fibo.setLocationRelativeTo(null);
+            fibo.setVisible(true);
+        });
     }
 
 

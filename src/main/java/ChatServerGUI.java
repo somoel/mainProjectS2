@@ -119,7 +119,8 @@ public class ChatServerGUI extends JFrame implements ActionListener {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             ChatServerGUI serverGUI = new ChatServerGUI();
-            serverGUI.setBounds(0, 0, 480, 240);
+            serverGUI.setBounds(0, 0, 430, 500);
+            serverGUI.setLocationRelativeTo(null);
             serverGUI.setVisible(true);
         });
     }
