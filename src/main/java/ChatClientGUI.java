@@ -6,7 +6,7 @@ import java.net.*;
 
 public class ChatClientGUI extends JFrame implements ActionListener {
 
-    // Elementos de la ventana del cliente
+    // Elementos de la ventana del cliente.
     private JLabel titleLabel, ipLabel, serverMessageLabel;
     private JTextField textField;
     private JButton sendButton;
