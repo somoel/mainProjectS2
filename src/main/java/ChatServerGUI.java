@@ -2,35 +2,32 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 
 public class ChatServerGUI extends JFrame implements ActionListener {
 
     // Elementos de la ventana del servidor
-    private JLabel titleLabel, ipLabel, clientMessageLabel, messageFromClientLabel;
+    private JLabel titleLabel, serverIPLabel, clientIPLabel, clientMessageLabel;
     private JTextField textField;
     private JButton sendButton;
+    private BufferedReader input;
     private PrintWriter output;
-
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    private BufferedReader input;
+    private String input_message,output_message;
+    private InetAddress ipLocal;
 
     // Constructor
     public ChatServerGUI() {
-        setLayout(null);
-
-        int port = 6969;
 
         try {
-            serverSocket = new ServerSocket(port);
+            serverSocket = new ServerSocket(6969);
+            ipLocal = InetAddress.getLocalHost();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+        setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Chat: Servidor");
 
@@ -39,17 +36,17 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         titleLabel.setBounds(10, 10, 410, 30);
         add(titleLabel);
 
-        ipLabel = new JLabel("IP del Servidor: " + getLocalIP());
-        ipLabel.setBounds(10, 40, 400, 30);
-        add(ipLabel);
+        serverIPLabel = new JLabel("IP del Servidor: " + ipLocal.getHostAddress());
+        serverIPLabel.setBounds(10, 40, 400, 30);
+        add(serverIPLabel);
 
-        clientMessageLabel = new JLabel("EL cliente no se ha conectado.");
-        clientMessageLabel.setBounds(10, 70, 400, 30);
+        clientIPLabel = new JLabel("EL cliente no se ha conectado.");
+        clientIPLabel.setBounds(10, 70, 400, 30);
+        add(clientIPLabel);
+
+        clientMessageLabel = new JLabel("No existe ningún mensaje del cliente.");
+        clientMessageLabel.setBounds(10,100, 400, 30);
         add(clientMessageLabel);
-
-        messageFromClientLabel = new JLabel("No existe ningún mensaje del cliente.");
-        messageFromClientLabel.setBounds(10,100, 400, 30);
-        add(messageFromClientLabel);
 
         textField = new JTextField();
         textField.setBounds(10, 160, 300, 20);
@@ -64,13 +61,13 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         Thread receiveMessages = new Thread(() -> {
             try {
                 clientSocket = serverSocket.accept();
-                clientMessageLabel.setText("Cliente conectado desde: " + clientSocket.getInetAddress());
+                clientIPLabel.setText("Cliente conectado desde: " + clientSocket.getInetAddress());
+
                 input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 output = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()), true);
 
-                String input_message;
                 while ((input_message = input.readLine()) != null) {
-                    messageFromClientLabel.setText(input_message);
+                    clientMessageLabel.setText(input_message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -79,21 +76,12 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         receiveMessages.start();
     }
 
-    // Método para obtener la IP local del servidor
-    private String getLocalIP() {
-        try {
-            InetAddress ipLocal = InetAddress.getLocalHost();
-            return ipLocal.getHostAddress();
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     // Método del botón
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == sendButton) {
-            String output_message1 = textField.getText();
-            output.println(output_message1);
+            output_message = textField.getText();
+            output.println(output_message);
             textField.setText("");
         }
     }

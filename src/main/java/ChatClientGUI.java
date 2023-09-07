@@ -10,26 +10,26 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     private JLabel titleLabel, ipLabel, serverMessageLabel;
     private JTextField textField;
     private JButton sendButton;
-    private String output_message;
+    private BufferedReader input;
     private PrintWriter output;
     private Socket socket;
-    private BufferedReader input;
+    private String  input_message, output_message;
 
     // Constructor
     public ChatClientGUI() {
-        setLayout(null);
 
-        int port = 6969;
         String serverIP = JOptionPane.showInputDialog("Ingrese la IP"); // IP del servidor predefinida
 
         try {
-            socket = new Socket(serverIP, port);
+            socket = new Socket(serverIP, 6969);
+            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al conectar al servidor: " + e.getMessage());
         }
 
+        setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Chat: Cliente");
 
@@ -58,10 +58,8 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         // Iniciar el hilo para recibir mensajes del servidor
         Thread receiveMessages = new Thread(() -> {
             try {
-                input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                String server_message;
-                while ((server_message = input.readLine()) != null) {
-                    serverMessageLabel.setText(server_message);
+                while ((input_message = input.readLine()) != null) {
+                    serverMessageLabel.setText(input_message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
