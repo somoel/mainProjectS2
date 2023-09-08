@@ -49,18 +49,19 @@ public class MainWindow extends JFrame implements ActionListener {
         // Formato a los componentes
         JRootPane rootPane = this.getRootPane();
         Container contentPane = rootPane.getContentPane();
-        for (Component c : contentPane.getComponents()) {
+        for (Component c : contentPane.getComponents()) { // Para cada componente
 
-            c.setFont(mainFont);
+            c.setFont(mainFont); // Se le asigna la fuente principal
 
             if (c instanceof JButton) {
-                ((JButton) c).addActionListener(this);
+                ((JButton) c).addActionListener(this); // Y a todos los botones les asiga el action listener
             }
         }
 
-        welcomeLabel.setFont(new Font("Open Sans", Font.BOLD, 30));
+        welcomeLabel.setFont(new Font("Open Sans", Font.BOLD, 30)); // El label va a tener otro tipo de fuente
     }
 
+    // Acción de los botones
     public void actionPerformed(ActionEvent event) {
         // Botón Fibonacci y llamada de la clase
         if (event.getSource() == fiboButton) {
@@ -76,12 +77,10 @@ public class MainWindow extends JFrame implements ActionListener {
         if (event.getSource() == chatServerButton) {
             setVisible(false);
 
-            ChatServerGUI chatServerGUI  = new ChatServerGUI();
+            ChatServerGUI chatServerGUI = new ChatServerGUI();
             chatServerGUI.setBounds(0, 0, 430, 500);
             chatServerGUI.setVisible(true);
             chatServerGUI.setLocationRelativeTo(null);
-
-
 
 
         }
@@ -97,7 +96,7 @@ public class MainWindow extends JFrame implements ActionListener {
         }
 
         // Botón Cerrar
-        if (event.getSource() == closeButton){
+        if (event.getSource() == closeButton) {
             dispose();
         }
     }

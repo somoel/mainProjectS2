@@ -14,12 +14,13 @@ public class ChatServerGUI extends JFrame implements ActionListener {
     private PrintWriter output;
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    private String input_message,output_message;
+    private String input_message, output_message;
     private InetAddress ipLocal;
 
     // Constructor
     public ChatServerGUI() {
 
+        // Se crea el serversocket y se obtiene la IP local
         try {
             serverSocket = new ServerSocket(6969);
             ipLocal = InetAddress.getLocalHost();
@@ -27,11 +28,11 @@ public class ChatServerGUI extends JFrame implements ActionListener {
             throw new RuntimeException(e);
         }
 
+        // Propios de la ventana
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Chat: Servidor");
 
-        // Contenido del label
         titleLabel = new JLabel("Bienvenido, servidor", SwingConstants.CENTER);
         titleLabel.setBounds(10, 10, 410, 30);
         add(titleLabel);
@@ -45,7 +46,7 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         add(clientIPLabel);
 
         clientMessageLabel = new JLabel("No existe ningún mensaje del cliente.");
-        clientMessageLabel.setBounds(10,100, 400, 30);
+        clientMessageLabel.setBounds(10, 100, 400, 30);
         add(clientMessageLabel);
 
         textField = new JTextField();
@@ -57,15 +58,17 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         sendButton.addActionListener(this);
         add(sendButton);
 
-        // Iniciar el hilo para escuchar al cliente
+        // Iniciar el hilo para recibir mensajes del cliente
         Thread receiveMessages = new Thread(() -> {
             try {
-                clientSocket = serverSocket.accept();
-                clientIPLabel.setText("Cliente conectado desde: " + clientSocket.getInetAddress());
+                clientSocket = serverSocket.accept(); // Espera la conexión del cliente
+                clientIPLabel.setText("Cliente conectado desde: " + clientSocket.getInetAddress()); // Especifica la IP del cliente conectado
 
+                // Input y Output
                 input = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 output = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()), true);
 
+                // Bucle que asigna el mensaje al label
                 while ((input_message = input.readLine()) != null) {
                     clientMessageLabel.setText(input_message);
                 }
@@ -73,22 +76,25 @@ public class ChatServerGUI extends JFrame implements ActionListener {
                 e.printStackTrace();
             }
         });
-        receiveMessages.start();
+        receiveMessages.start(); // Iniciar el hilo
     }
 
 
     // Método del botón
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == sendButton) {
+            // Enviar al output lo que está en el textField
             output_message = textField.getText();
             output.println(output_message);
             textField.setText("");
         }
     }
 
+    // Main
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             ChatServerGUI serverGUI = new ChatServerGUI();
+
             serverGUI.setBounds(0, 0, 430, 500);
             serverGUI.setLocationRelativeTo(null);
             serverGUI.setVisible(true);

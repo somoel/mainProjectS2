@@ -6,25 +6,24 @@ import java.util.Arrays;
 // Clase del cálculo de Fibonacci
 public class FiboGUI extends JFrame implements ActionListener {
 
-    // elementos de la ventana fibonacci
+    // Elementos de la ventana fibonacci
     private JLabel titleLabel, nLabel, resultLabel;
     private JTextField nField;
     private JButton calcFiboButton, backButton, closeButton;
 
-    // Variable a contar
-    private int n;
+    private int n; // Variable a contar
 
-    // Ventana anterior
-    private JFrame ventanaAnterior;
+    private JFrame ventanaAnterior; // Manejo de la ventana anterior
 
     // Constructor
     public FiboGUI(JFrame ventanaAnterior) {
         this.ventanaAnterior = ventanaAnterior;
 
+        // Propios de la ventana
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Programa Fibonacci");
-        //contenido del label
+
         titleLabel = new JLabel("Números de Fibonacci", SwingConstants.CENTER);
         titleLabel.setBounds(10, 10, 400, 30);
         add(titleLabel);
@@ -60,32 +59,25 @@ public class FiboGUI extends JFrame implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent event) {
+
+        // Calculo y muestreo de la serie de Fibonacci
         if (event.getSource() == calcFiboButton) {
             try {
-                n = Integer.parseInt(nField.getText());
+                n = Integer.parseInt(nField.getText()); // Obtener el número
             } catch (Exception NumberFormatException) {
                 JOptionPane.showMessageDialog(this, "Error\n\nDebe ser un número entero.");
             }
 
-            if (n < 0) {
+            if (n < 0) { // Revisión de número positivo
                 JOptionPane.showMessageDialog(this, "Error\n\nDebe ser un número positivo.");
             }
 
             // Devolución del arreglo con los números de la secuencia
             switch (n) {
-
-                case 0:
-                    resultLabel.setText("");
-
-                case 1:
-                    resultLabel.setText("0");
-                    break;
-
-                case 2:
-                    resultLabel.setText("[0, 1]");
-                    break;
-
-                default:
+                case 0 -> resultLabel.setText("");
+                case 1 -> resultLabel.setText("0");
+                case 2 -> resultLabel.setText("[0, 1]");
+                default -> {
 
                     // se crea un arreglo del tamaño que el usuario decida
                     int[] arreglo = new int[n];
@@ -102,25 +94,26 @@ public class FiboGUI extends JFrame implements ActionListener {
 
                     // impresion de la secuencia fiboonacci
                     resultLabel.setText(Arrays.toString(arreglo));
+                }
             }
 
         }
 
         // Botón Volver
-        if (event.getSource() == backButton){
+        if (event.getSource() == backButton) {
             dispose();
             try {
-                ventanaAnterior.setVisible(true);
+                ventanaAnterior.setVisible(true); // Resume la ventana anterior
             } catch (java.lang.NullPointerException ignored) {
 
             }
         }
 
         // Botón Cerrar
-        if (event.getSource() == closeButton){
+        if (event.getSource() == closeButton) {
             dispose();
             try {
-                ventanaAnterior.dispose();
+                ventanaAnterior.dispose(); // Cierra la ventana anterior
             } catch (java.lang.NullPointerException ignored) {
             }
         }

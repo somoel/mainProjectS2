@@ -13,15 +13,16 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     private BufferedReader input;
     private PrintWriter output;
     private Socket socket;
-    private String  input_message, output_message;
+    private String input_message, output_message, server_IP;
 
     // Constructor
     public ChatClientGUI() {
 
-        String serverIP = JOptionPane.showInputDialog("Ingrese la IP"); // IP del servidor predefinida
+        server_IP = JOptionPane.showInputDialog("Ingrese la IP"); // Se pide la IP del servidor
 
+        // Creación del socket con la IP del server y los IOs
         try {
-            socket = new Socket(serverIP, 6969);
+            socket = new Socket(server_IP, 6969);
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
         } catch (IOException e) {
@@ -29,16 +30,16 @@ public class ChatClientGUI extends JFrame implements ActionListener {
             JOptionPane.showMessageDialog(this, "Error al conectar al servidor: " + e.getMessage());
         }
 
+        // Propios de la ventana
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Chat: Cliente");
 
-        // Contenido del label
         titleLabel = new JLabel("Bienvenido, cliente", SwingConstants.CENTER);
         titleLabel.setBounds(10, 10, 400, 30);
         add(titleLabel);
 
-        ipLabel = new JLabel("Conectado al servidor " + serverIP);
+        ipLabel = new JLabel("Conectado al servidor " + server_IP);
         ipLabel.setBounds(10, 40, 400, 30);
         add(ipLabel);
 
@@ -58,6 +59,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         // Iniciar el hilo para recibir mensajes del servidor
         Thread receiveMessages = new Thread(() -> {
             try {
+                // Bucle que asigna el mensaje al label
                 while ((input_message = input.readLine()) != null) {
                     serverMessageLabel.setText(input_message);
                 }
@@ -65,18 +67,20 @@ public class ChatClientGUI extends JFrame implements ActionListener {
                 e.printStackTrace();
             }
         });
-        receiveMessages.start();
+        receiveMessages.start(); // Iniciar el hilo
     }
 
     // Método del botón
     public void actionPerformed(ActionEvent event) {
         if (event.getSource() == sendButton) {
+            // Enviar al output lo que está en el textField
             output_message = textField.getText();
             output.println(output_message);
             textField.setText("");
         }
     }
 
+    // Main
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             ChatClientGUI clientGUI = new ChatClientGUI();
