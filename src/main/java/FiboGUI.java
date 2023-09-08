@@ -13,11 +13,11 @@ public class FiboGUI extends JFrame implements ActionListener {
 
     private int n; // Variable a contar
 
-    private JFrame ventanaAnterior; // Manejo de la ventana anterior
+    private JFrame backFrame; // Manejo de la ventana anterior
 
     // Constructor
-    public FiboGUI(JFrame ventanaAnterior) {
-        this.ventanaAnterior = ventanaAnterior;
+    public FiboGUI(JFrame backFrame) {
+        this.backFrame = backFrame;
 
         // Propios de la ventana
         setLayout(null);
@@ -48,13 +48,13 @@ public class FiboGUI extends JFrame implements ActionListener {
 
         backButton = new JButton("Volver");
         backButton.setBounds(10, 150, 195, 30);
-        backButton.addActionListener(this);
         add(backButton);
 
         closeButton = new JButton("Cerrar");
         closeButton.setBounds(215, 150, 195, 30);
-        closeButton.addActionListener(this);
         add(closeButton);
+
+        new BackAndCloseB(this, this.backFrame, backButton, closeButton); // Funciones de volver y cerrar
 
     }
 
@@ -97,25 +97,7 @@ public class FiboGUI extends JFrame implements ActionListener {
                 }
             }
 
-        }
 
-        // Botón Volver
-        if (event.getSource() == backButton) {
-            dispose();
-            try {
-                ventanaAnterior.setVisible(true); // Resume la ventana anterior
-            } catch (java.lang.NullPointerException ignored) {
-
-            }
-        }
-
-        // Botón Cerrar
-        if (event.getSource() == closeButton) {
-            dispose();
-            try {
-                ventanaAnterior.dispose(); // Cierra la ventana anterior
-            } catch (java.lang.NullPointerException ignored) {
-            }
         }
     }
 

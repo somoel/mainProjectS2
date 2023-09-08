@@ -9,16 +9,18 @@ public class ChatServerGUI extends JFrame implements ActionListener {
     // Elementos de la ventana del servidor
     private JLabel titleLabel, serverIPLabel, clientIPLabel, clientMessageLabel;
     private JTextField textField;
-    private JButton sendButton;
+    private JButton sendButton, backButton, closeButton;
     private BufferedReader input;
     private PrintWriter output;
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private String input_message, output_message;
     private InetAddress ipLocal;
+    private JFrame backFrame;
 
     // Constructor
-    public ChatServerGUI() {
+    public ChatServerGUI(JFrame backFrame) {
+        this.backFrame = backFrame;
 
         // Se crea el serversocket y se obtiene la IP local
         try {
@@ -58,6 +60,16 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         sendButton.addActionListener(this);
         add(sendButton);
 
+        backButton = new JButton("Volver");
+        backButton.setBounds(10, 185, 195, 30);
+        add(backButton);
+
+        closeButton = new JButton("Cerrar");
+        closeButton.setBounds(215, 185, 195, 30);
+        add(closeButton);
+
+        new BackAndCloseB(this, this.backFrame, backButton, closeButton); // Funciones de volver y cerrar
+
         // Iniciar el hilo para recibir mensajes del cliente
         Thread receiveMessages = new Thread(() -> {
             try {
@@ -93,7 +105,7 @@ public class ChatServerGUI extends JFrame implements ActionListener {
     // Main
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            ChatServerGUI serverGUI = new ChatServerGUI();
+            ChatServerGUI serverGUI = new ChatServerGUI(null);
 
             serverGUI.setBounds(0, 0, 430, 500);
             serverGUI.setLocationRelativeTo(null);

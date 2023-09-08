@@ -9,14 +9,16 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     // Elementos de la ventana del cliente.
     private JLabel titleLabel, ipLabel, serverMessageLabel;
     private JTextField textField;
-    private JButton sendButton;
+    private JButton sendButton, backButton, closeButton;
     private BufferedReader input;
     private PrintWriter output;
     private Socket socket;
     private String input_message, output_message, server_IP;
+    private JFrame backFrame;
 
     // Constructor
-    public ChatClientGUI() {
+    public ChatClientGUI(JFrame backFrame) {
+        this.backFrame = backFrame;
 
         server_IP = JOptionPane.showInputDialog("Ingrese la IP"); // Se pide la IP del servidor
 
@@ -56,6 +58,16 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         sendButton.addActionListener(this);
         add(sendButton);
 
+        backButton = new JButton("Volver");
+        backButton.setBounds(10, 150, 195, 30);
+        add(backButton);
+
+        closeButton = new JButton("Cerrar");
+        closeButton.setBounds(215, 150, 195, 30);
+        add(closeButton);
+
+        new BackAndCloseB(this, this.backFrame, backButton, closeButton); // Funciones de volver y cerrar
+
         // Iniciar el hilo para recibir mensajes del servidor
         Thread receiveMessages = new Thread(() -> {
             try {
@@ -83,7 +95,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     // Main
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            ChatClientGUI clientGUI = new ChatClientGUI();
+            ChatClientGUI clientGUI = new ChatClientGUI(null);
             clientGUI.setBounds(0, 0, 430, 500);
             clientGUI.setLocationRelativeTo(null);
             clientGUI.setVisible(true);
