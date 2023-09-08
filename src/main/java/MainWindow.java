@@ -3,7 +3,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-// Clase principal de la ejecución
+/* Ventana principal que incluye
+todos los módulos adyacentes
+ */
 public class MainWindow extends JFrame implements ActionListener {
 
     // Elementos de la ventana

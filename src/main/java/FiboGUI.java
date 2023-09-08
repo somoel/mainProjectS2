@@ -54,7 +54,7 @@ public class FiboGUI extends JFrame implements ActionListener {
         closeButton.setBounds(215, 150, 195, 30);
         add(closeButton);
 
-        new BackAndCloseB(this, this.backFrame, backButton, closeButton); // Funciones de volver y cerrar
+        new BackAndCloseB(this, this.backFrame, backButton, closeButton, null); // Funciones de volver y cerrar
 
     }
 
