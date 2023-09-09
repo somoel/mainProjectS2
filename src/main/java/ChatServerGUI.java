@@ -41,8 +41,8 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Chat: Servidor");
 
-        titleLabel = new JLabel("Bienvenido, servidor", SwingConstants.CENTER);
-        titleLabel.setBounds(10, 10, 410, 30);
+        titleLabel = new JLabel("Chat: Servidor", SwingConstants.RIGHT);
+        titleLabel.setBounds(10, 10, 400, 30);
         add(titleLabel);
 
         serverIPLabel = new JLabel("IP del Servidor: " + ipLocal.getHostAddress());
@@ -84,6 +84,8 @@ public class ChatServerGUI extends JFrame implements ActionListener {
             }
         });
 
+        new Styles(this, titleLabel,textField); // Agrega colores
+
 
         // Iniciar el hilo para recibir mensajes del cliente
         Thread receiveMessages = new Thread(() -> {
@@ -114,7 +116,14 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         if (event.getSource() == sendButton || event.getSource() == textField) {
             // Enviar al output lo que está en el textField
             output_message = textField.getText();
-            output.println(output_message);
+
+            // Revisar si se envía el mensaje
+            try {
+                output.println(output_message);
+            } catch (NullPointerException e) {
+                JOptionPane.showMessageDialog(this, "No se pudo enviar el mensaje",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
             textField.setText("");
         }
     }
