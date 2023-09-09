@@ -18,7 +18,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     private BufferedReader input;
     private PrintWriter output;
     private Socket socket;
-    private String input_message, output_message, server_IP;
+    private String input_message, output_message, server_IP, ip_local = "Sin IP";
     private JFrame backFrame;
     private LocalTime time;
     private InetAddress ipLocal;
@@ -37,6 +37,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
 
             ipLocal = InetAddress.getLocalHost(); // Obtener la IP del cliente para mostrarla en pantalla y asegurarse de que el servidor
                                                   // esté conectado realmente al cliente.
+            ip_local = ipLocal.getHostAddress();
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al conectar al servidor: " + e.getMessage());
@@ -55,7 +56,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         serverIPLabel.setBounds(10, 40, 400, 30);
         add(serverIPLabel);
 
-        clientIPLabel = new JLabel("IP del cliente: " + ipLocal.getHostAddress());
+        clientIPLabel = new JLabel("IP del cliente: " + ip_local);
         clientIPLabel.setBounds(10, 70, 400, 30);
         add(clientIPLabel);
 
