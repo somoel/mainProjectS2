@@ -48,7 +48,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Chat: Cliente");
 
-        titleLabel = new JLabel("Bienvenido, cliente", SwingConstants.CENTER);
+        titleLabel = new JLabel("Chat: Cliente", SwingConstants.RIGHT);
         titleLabel.setBounds(10, 10, 400, 30);
         add(titleLabel);
 
@@ -83,6 +83,8 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         add(closeButton);
 
         new BackAndCloseB(this, this.backFrame, backButton, closeButton, null); // Funciones de volver y cerrar
+
+        new Styles(this, titleLabel, textField); // Agrega colores
 
         // Iniciar el hilo para recibir mensajes del servidor
         Thread receiveMessages = new Thread(() -> {

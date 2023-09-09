@@ -20,11 +20,10 @@ public class FiboGUI extends JFrame implements ActionListener {
         this.backFrame = backFrame;
 
         // Propios de la ventana
-        setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Programa Fibonacci");
 
-        titleLabel = new JLabel("Números de Fibonacci", SwingConstants.CENTER);
+        titleLabel = new JLabel("Números de Fibonacci", SwingConstants.RIGHT);
         titleLabel.setBounds(10, 10, 400, 30);
         add(titleLabel);
 
@@ -53,6 +52,8 @@ public class FiboGUI extends JFrame implements ActionListener {
         closeButton = new JButton("Cerrar");
         closeButton.setBounds(215, 150, 195, 30);
         add(closeButton);
+
+        new Styles(this, titleLabel, nField); // Agrega colores
 
         new BackAndCloseB(this, this.backFrame, backButton, closeButton, null); // Funciones de volver y cerrar
 
