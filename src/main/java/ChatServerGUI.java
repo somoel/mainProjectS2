@@ -56,7 +56,8 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         add(serverIPLabel);
 
         clientIPLabel = new JLabel("<html>El cliente no se ha conectado.<br>Esperando conexión...</html>");
-        clientIPLabel.setBounds(10, 110, 400, 90);
+        clientIPLabel.setVerticalAlignment(clientMessageLabel.TOP);
+        clientIPLabel.setBounds(10, 110, 400, 50);
         add(clientIPLabel);
 
         clientMessageLabel = new JLabel("Aquí aparecerán los mensajes del cliente.");
@@ -77,11 +78,11 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         add(sendButton);
 
         backButton = new JButton("Volver");
-        backButton.setBounds(10, 430, 195, 30);
+        backButton.setBounds(10, 415, 195, 45);
         add(backButton);
 
         closeButton = new JButton("Cerrar");
-        closeButton.setBounds(215, 430, 195, 30);
+        closeButton.setBounds(215, 415, 195, 45);
         add(closeButton);
 
         // Funciones de volver y cerrar

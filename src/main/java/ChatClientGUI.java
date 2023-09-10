@@ -28,6 +28,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     public ChatClientGUI(JFrame backFrame) {
         this.backFrame = backFrame;
 
+
         server_IP = JOptionPane.showInputDialog("Ingrese la IP"); // Se pide la IP del servidor
 
         // Creación del socket con la IP del server y los IOs
@@ -42,6 +43,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         } catch (IOException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al conectar al servidor: " + e.getMessage());
+            server_IP = "null";
         }
 
         // Propios de la ventana
@@ -49,41 +51,42 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Chat: Cliente");
 
-        titleLabel = new JLabel("Chat: Cliente", SwingConstants.CENTER);
-        titleLabel.setBounds(10, 10, 400, 30);
+        titleLabel = new JLabel("Chat: Cliente");
+        titleLabel.setBounds(10, 10, 400, 40);
         add(titleLabel);
 
         separatorTitle = new JSeparator();
         add(separatorTitle);
 
         serverIPLabel = new JLabel("Conectado al servidor " + server_IP);
-        serverIPLabel.setBounds(10, 40, 400, 30);
+        serverIPLabel.setBounds(10, 80, 400, 30);
         add(serverIPLabel);
 
         clientIPLabel = new JLabel("IP del cliente: " + ip_local);
-        clientIPLabel.setBounds(10, 70, 400, 30);
+        clientIPLabel.setBounds(10, 110, 400, 30);
         add(clientIPLabel);
 
         serverMessageLabel = new JLabel("Aquí aparecerán los mensajes del servidor.");
-        serverMessageLabel.setBounds(10, 100, 400, 30);
+        serverMessageLabel.setVerticalAlignment(serverMessageLabel.BOTTOM);
+        serverMessageLabel.setBounds(10, 200, 400, 150);
         add(serverMessageLabel);
 
         textField = new JTextField();
-        textField.setBounds(10, 160, 300, 20);
+        textField.setBounds(10, 360, 300, 40);
         textField.addActionListener(this);
         add(textField);
 
         sendButton = new JButton("Enviar");
-        sendButton.setBounds(310, 160, 100, 20);
+        sendButton.setBounds(310, 360, 100, 40);
         sendButton.addActionListener(this);
         add(sendButton);
 
         backButton = new JButton("Volver");
-        backButton.setBounds(10, 185, 195, 30);
+        backButton.setBounds(10, 415, 195, 45);
         add(backButton);
 
         closeButton = new JButton("Cerrar");
-        closeButton.setBounds(215, 185, 195, 30);
+        closeButton.setBounds(215, 415, 195, 45);
         add(closeButton);
 
         new BackAndCloseB(this, this.backFrame, backButton, closeButton, null); // Funciones de volver y cerrar
