@@ -40,7 +40,7 @@ public class FiboGUI extends JFrame implements ActionListener {
 
         nField = new JTextField();
         nField.setHorizontalAlignment(JTextField.CENTER);
-        nField.setBounds(95,130, 70, 50);
+        nField.setBounds(95, 130, 70, 50);
         nField.addActionListener(this);
         add(nField);
 

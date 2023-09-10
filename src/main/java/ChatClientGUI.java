@@ -1,7 +1,11 @@
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -30,7 +34,6 @@ public class ChatClientGUI extends JFrame implements ActionListener {
 
         server_IP = JOptionPane.showInputDialog(null, "Ingrese la IP del servidor"
                 , "Servidor", JOptionPane.INFORMATION_MESSAGE); // Se pide la IP del servidor
-
 
 
         // Creación del socket con la IP del server y los IOs
@@ -128,7 +131,8 @@ public class ChatClientGUI extends JFrame implements ActionListener {
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "El servidor cerró la conexión.",
                         "Error", JOptionPane.ERROR_MESSAGE);
-            } catch (NullPointerException ignored) {}
+            } catch (NullPointerException ignored) {
+            }
         });
         receiveMessages.start(); // Iniciar el hilo
     }
@@ -136,8 +140,8 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     // Método del botón
     public void actionPerformed(ActionEvent event) {
         // Se escucha del botón y el enter del textField
-        if (( event.getSource() == sendButton || event.getSource() == textField)
-                && (! textField.getText().isEmpty())) {
+        if ((event.getSource() == sendButton || event.getSource() == textField)
+                && (!textField.getText().isEmpty())) {
 
             try {
                 output.println(textField.getText());

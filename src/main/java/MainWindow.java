@@ -1,11 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /* Ventana principal que incluye
 todos los módulos adyacentes
  */
-public class MainWindow extends JFrame implements ActionListener{
+public class MainWindow extends JFrame implements ActionListener {
 
     // Elementos de la ventana
     private JLabel welcomeLabel, chatLabel;
@@ -50,7 +53,7 @@ public class MainWindow extends JFrame implements ActionListener{
 
         new Styles(this, welcomeLabel, null, null); // Agrega colores
 
-        for (Component c: getRootPane().getContentPane().getComponents()){
+        for (Component c : getRootPane().getContentPane().getComponents()) {
             if (c instanceof JButton) {
                 c.addMouseListener(new MouseAdapter() {
 
@@ -108,6 +111,7 @@ public class MainWindow extends JFrame implements ActionListener{
             dispose();
         }
     }
+
     // Creador de la Ventana
     public static void main(String[] args) {
         MainWindow mwindow = new MainWindow();

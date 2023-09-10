@@ -25,7 +25,7 @@ public class Styles {
     public static Font mainFont = new Font("Product Sans", Font.PLAIN, 20);
 
     // Constructor y unica función
-    public Styles(JFrame frame, JLabel titleLabel, JTextField textField, JSeparator underlineTitle){
+    public Styles(JFrame frame, JLabel titleLabel, JTextField textField, JSeparator underlineTitle) {
         this.frame = frame;
         this.titleLabel = titleLabel;
         this.textField = textField;
@@ -36,12 +36,12 @@ public class Styles {
         this.frame.setResizable(false);
 
         // Obtiene cada componente del frame
-        for (Component c: this.frame.getRootPane().getContentPane().getComponents()){
+        for (Component c : this.frame.getRootPane().getContentPane().getComponents()) {
 
             c.setFont(mainFont); // Asigna la fuente
             c.setForeground(darkBlack); // Y el color de la fuente
 
-            if (c instanceof JButton){ // Para cada botón le asigna un Mouse Listener
+            if (c instanceof JButton) { // Para cada botón le asigna un Mouse Listener
                 c.addMouseListener(new MouseAdapter() {
 
                     // Al pasar el cursor sobre un botón
@@ -67,7 +67,7 @@ public class Styles {
             }
         }
 
-        this.titleLabel.setFont(mainFont.deriveFont(Font.BOLD,30)); // Fuente para el título
+        this.titleLabel.setFont(mainFont.deriveFont(Font.BOLD, 30)); // Fuente para el título
 
         // Fuente para el textfield con su debido color
         if (this.textField != null) {

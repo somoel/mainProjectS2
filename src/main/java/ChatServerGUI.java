@@ -4,7 +4,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.*;
-import java.net.*;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
@@ -106,10 +109,11 @@ public class ChatServerGUI extends JFrame implements ActionListener {
                 clientSocket.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
-            } catch (NullPointerException ignored) {}
+            } catch (NullPointerException ignored) {
+            }
         });
 
-        new Styles(this, titleLabel,textField, separatorTitle); // Agrega colores
+        new Styles(this, titleLabel, textField, separatorTitle); // Agrega colores
 
         separatorTitle.setBorder(BorderFactory.createLineBorder(Styles.darkBlue, 3));
 
@@ -119,7 +123,6 @@ public class ChatServerGUI extends JFrame implements ActionListener {
                 sendButton.setFont(Styles.mainFont);
             }
         });
-
 
 
         // Iniciar el hilo para recibir mensajes del cliente
@@ -146,7 +149,8 @@ public class ChatServerGUI extends JFrame implements ActionListener {
                             + time.format(DateTimeFormatter.ofPattern("h:mm:ss a"))
                             + "</i></p></html>");
                 }
-            } catch (IOException ignored){}
+            } catch (IOException ignored) {
+            }
         });
         receiveMessages.start(); // Iniciar el hilo
     }
@@ -154,7 +158,7 @@ public class ChatServerGUI extends JFrame implements ActionListener {
 
     // Método del botón
     public void actionPerformed(ActionEvent event) {
-        if ((event.getSource() == sendButton || event.getSource() == textField) && (! textField.getText().isEmpty() )) {
+        if ((event.getSource() == sendButton || event.getSource() == textField) && (!textField.getText().isEmpty())) {
             // Enviar al output lo que está en el textField
 
             try {
