@@ -22,7 +22,7 @@ public class ChatServerGUI extends JFrame implements ActionListener {
     private PrintWriter output;
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    private String input_message, output_message;
+    private String input_message;
     private InetAddress ipLocal;
     private JFrame backFrame;
     private LocalTime time;
@@ -31,13 +31,27 @@ public class ChatServerGUI extends JFrame implements ActionListener {
     public ChatServerGUI(JFrame backFrame) {
         this.backFrame = backFrame;
 
-        // Se crea el serversocket y se obtiene la IP local
+        // Se crea el serversocket
         try {
             serverSocket = new ServerSocket(6969);
-            ipLocal = InetAddress.getLocalHost();
         } catch (IOException e) {
+            if (e.getMessage().equals("Address already in use: bind")) {
+                JOptionPane.showMessageDialog(null,
+                        "Actualmente hay un servidor abierto en este dispositivo",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+                setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            } else {
+                e.printStackTrace();
+            }
+        }
+
+        // Se obtiene la IP local
+        try {
+            ipLocal = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
+
 
         // Propios de la ventana
         setLayout(null);
@@ -89,9 +103,10 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         new BackAndCloseB(this, this.backFrame, backButton, closeButton, () -> {
             try {
                 serverSocket.close();
+                clientSocket.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
-            }
+            } catch (NullPointerException ignored) {}
         });
 
         new Styles(this, titleLabel,textField, separatorTitle); // Agrega colores
@@ -111,7 +126,9 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         Thread receiveMessages = new Thread(() -> {
             try {
                 clientSocket = serverSocket.accept(); // Espera la conexión del cliente
-                clientIPLabel.setText("Cliente conectado desde: " + clientSocket.getInetAddress().toString().substring(1)); // Especifica la IP del cliente conectado
+                // Especifica la IP del cliente conectado
+                clientIPLabel.setText("Cliente conectado desde: " +
+                        clientSocket.getInetAddress().toString().substring(1));
 
                 textField.setEnabled(true);
                 sendButton.setEnabled(true);
@@ -123,12 +140,13 @@ public class ChatServerGUI extends JFrame implements ActionListener {
                 // Bucle que asigna el mensaje al label
                 while ((input_message = input.readLine()) != null) {
                     time = LocalTime.now();
-                    clientMessageLabel.setText("<html>El cliente dice: " + input_message +
-                            " (a las " + time.format(DateTimeFormatter.ofPattern("h:mm:ss a")) + ")</html>");
+                    clientMessageLabel.setText("<html><p style='color: #a4a6ad; '><i>El cliente dice: </i></p>"
+                            + input_message
+                            + " <p style='color: #a4a6ad; font-size: 10px; float: right;'><i>a las "
+                            + time.format(DateTimeFormatter.ofPattern("h:mm:ss a"))
+                            + "</i></p></html>");
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException ignored){}
         });
         receiveMessages.start(); // Iniciar el hilo
     }
@@ -136,19 +154,17 @@ public class ChatServerGUI extends JFrame implements ActionListener {
 
     // Método del botón
     public void actionPerformed(ActionEvent event) {
-        if (event.getSource() == sendButton || event.getSource() == textField) {
+        if ((event.getSource() == sendButton || event.getSource() == textField) && (! textField.getText().isEmpty() )) {
             // Enviar al output lo que está en el textField
-            output_message = textField.getText();
-            // TODO: Evitar que se envíen mensajes vacíos.
 
-            // Revisar si se envía el mensaje
             try {
-                output.println(output_message);
+                output.println(textField.getText());
             } catch (NullPointerException e) {
-                JOptionPane.showMessageDialog(this, "No se pudo enviar el mensaje",
+                JOptionPane.showMessageDialog(this, "No se pudo enviar el mensaje.",
                         "Error", JOptionPane.ERROR_MESSAGE);
             }
             textField.setText("");
+
         }
     }
 

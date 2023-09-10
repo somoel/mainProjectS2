@@ -18,7 +18,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     private BufferedReader input;
     private PrintWriter output;
     private Socket socket;
-    private String input_message, output_message, server_IP, ip_local = "Error";
+    private String input_message, server_IP, ip_local = "Error";
     private JFrame backFrame;
     private LocalTime time;
     private InetAddress ipLocal;
@@ -31,19 +31,27 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         server_IP = JOptionPane.showInputDialog(null, "Ingrese la IP del servidor"
                 , "Servidor", JOptionPane.INFORMATION_MESSAGE); // Se pide la IP del servidor
 
+
+
         // Creación del socket con la IP del server y los IOs
         try {
 
-            ipLocal = InetAddress.getLocalHost(); // Obtener la IP del cliente para mostrarla en pantalla y asegurarse de que el servidor
-            // esté conectado realmente al cliente.
+            /* Obtener la IP del cliente para mostrarla en pantalla y
+            asegurarse de que el servidor esté conectado realmente al cliente.
+             */
+            ipLocal = InetAddress.getLocalHost();
+
             ip_local = ipLocal.getHostAddress();
 
             socket = new Socket(server_IP, 6969);
             input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             output = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
+
+            if (server_IP.isEmpty()) server_IP = "localhost";
+
         } catch (IOException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al conectar al servidor: " + e.getMessage());
+            JOptionPane.showMessageDialog(this,
+                    "Error al conectar al servidor: " + e.getMessage());
             server_IP = "null";
         }
 
@@ -59,7 +67,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         separatorTitle = new JSeparator();
         add(separatorTitle);
 
-        serverIPLabel = new JLabel("Conectado al servidor " + server_IP);
+        serverIPLabel = new JLabel("Conectado al servidor: " + server_IP);
         serverIPLabel.setBounds(10, 80, 400, 30);
         add(serverIPLabel);
 
@@ -90,7 +98,9 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         closeButton.setBounds(215, 415, 195, 45);
         add(closeButton);
 
-        new BackAndCloseB(this, this.backFrame, backButton, closeButton, null); // Funciones de volver y cerrar
+
+        // Funciones de volver y cerrar
+        new BackAndCloseB(this, this.backFrame, backButton, closeButton, null);
 
         new Styles(this, titleLabel, textField, separatorTitle); // Agrega colores
 
@@ -109,21 +119,32 @@ public class ChatClientGUI extends JFrame implements ActionListener {
                 // Bucle que asigna el mensaje al label
                 while ((input_message = input.readLine()) != null) {
                     time = LocalTime.now(); // Captura el tiempo actual
-                    serverMessageLabel.setText("El servidor dice: " + input_message +
-                            " (a las " + time.format(DateTimeFormatter.ofPattern("h:mm:ss a")) + ")");
+                    serverMessageLabel.setText("<html><p style='color: #a4a6ad; '><i>El servidor dice: </i></p>"
+                            + input_message
+                            + " <p style='color: #a4a6ad; font-size: 10px; float: right;'><i>a las "
+                            + time.format(DateTimeFormatter.ofPattern("h:mm:ss a"))
+                            + "</i></p></html>");
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-            }
+                JOptionPane.showMessageDialog(this, "El servidor cerró la conexión.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (NullPointerException ignored) {}
         });
         receiveMessages.start(); // Iniciar el hilo
     }
 
     // Método del botón
     public void actionPerformed(ActionEvent event) {
-        if ((event.getSource() == sendButton) || (event.getSource() == textField)) { // Se escucha del botón y el enter del textField
-            output_message = textField.getText();
-            output.println(output_message);
+        // Se escucha del botón y el enter del textField
+        if (( event.getSource() == sendButton || event.getSource() == textField)
+                && (! textField.getText().isEmpty())) {
+
+            try {
+                output.println(textField.getText());
+            } catch (NullPointerException e) {
+                JOptionPane.showMessageDialog(this, "Output desconocido",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
             textField.setText("");
         }
     }

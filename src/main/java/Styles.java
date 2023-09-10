@@ -49,7 +49,7 @@ public class Styles {
                     public void mouseEntered(MouseEvent e) {
                         c.setBackground(offOrange);
                         c.setForeground(darkBlack);
-                        c.setFont(mainFont.deriveFont(Font.BOLD, 25));
+                        c.setFont(mainFont.deriveFont(Font.ITALIC, 25));
                     }
 
                     // Al sacar el cursor sobre dicho botón
@@ -67,7 +67,7 @@ public class Styles {
             }
         }
 
-        this.titleLabel.setFont(new Font("Product Sans", Font.BOLD, 30)); // Fuente para el título
+        this.titleLabel.setFont(mainFont.deriveFont(Font.BOLD,30)); // Fuente para el título
 
         // Fuente para el textfield con su debido color
         if (this.textField != null) {
