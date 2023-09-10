@@ -15,6 +15,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     private JLabel titleLabel, serverIPLabel, clientIPLabel, serverMessageLabel;
     private JTextField textField;
     private JButton sendButton, backButton, closeButton;
+    private JSeparator separatorTitle;
     private BufferedReader input;
     private PrintWriter output;
     private Socket socket;
@@ -48,9 +49,12 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Chat: Cliente");
 
-        titleLabel = new JLabel("Chat: Cliente", SwingConstants.RIGHT);
+        titleLabel = new JLabel("Chat: Cliente", SwingConstants.CENTER);
         titleLabel.setBounds(10, 10, 400, 30);
         add(titleLabel);
+
+        separatorTitle = new JSeparator();
+        add(separatorTitle);
 
         serverIPLabel = new JLabel("Conectado al servidor " + server_IP);
         serverIPLabel.setBounds(10, 40, 400, 30);
@@ -84,7 +88,9 @@ public class ChatClientGUI extends JFrame implements ActionListener {
 
         new BackAndCloseB(this, this.backFrame, backButton, closeButton, null); // Funciones de volver y cerrar
 
-        new Styles(this, titleLabel, textField); // Agrega colores
+        new Styles(this, titleLabel, textField, separatorTitle); // Agrega colores
+
+        separatorTitle.setBorder(BorderFactory.createLineBorder(Styles.pastelGreen, 3));
 
         // Iniciar el hilo para recibir mensajes del servidor
         Thread receiveMessages = new Thread(() -> {

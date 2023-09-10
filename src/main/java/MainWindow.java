@@ -20,17 +20,17 @@ public class MainWindow extends JFrame implements ActionListener{
         setTitle("Programa Principal");
 
         // Elementos de la ventana
-        welcomeLabel = new JLabel("Bienvenido de nuevo", SwingConstants.RIGHT);
-        welcomeLabel.setBounds(10, 10, 400, 50);
+        welcomeLabel = new JLabel("Bienvenido de nuevo", SwingConstants.CENTER);
+        welcomeLabel.setBounds(10, 10, 400, 110);
         add(welcomeLabel);
 
         fiboButton = new JButton("¿Fibonacci?");
-        fiboButton.setBounds(10, 120, 400, 70);
+        fiboButton.setBounds(10, 170, 400, 70);
         fiboButton.addActionListener(this);
         add(fiboButton);
 
 
-        chatLabel = new JLabel("¿Ó el chat?");
+        chatLabel = new JLabel("¿Ó el chat?", SwingConstants.CENTER);
         chatLabel.setBounds(10, 250, 400, 50);
         add(chatLabel);
 
@@ -49,7 +49,7 @@ public class MainWindow extends JFrame implements ActionListener{
         closeButton.addActionListener(this);
         add(closeButton);
 
-        new Styles(this, welcomeLabel, null); // Agrega colores
+        new Styles(this, welcomeLabel, null, null); // Agrega colores
 
         for (Component c: getRootPane().getContentPane().getComponents()){
             if (c instanceof JButton) {
@@ -60,7 +60,7 @@ public class MainWindow extends JFrame implements ActionListener{
                     public void mouseEntered(MouseEvent e) {
                         if (e.getSource() == chatServerButton) c.setBackground(Styles.lightBlue);
                         if (e.getSource() == chatClientButton) c.setBackground(Styles.pastelGreen);
-                        c.setForeground(Styles.darkBlue);
+                        c.setForeground(Styles.darkBlack);
                     }
                 });
             }

@@ -10,35 +10,36 @@ public class Styles {
     private JFrame frame;
     private JLabel titleLabel;
     private JTextField textField;
+    private JSeparator underlineTitle;
 
     // Paleta de colores usados en la interfaz
-    public static Color darkBlue = Color.decode("#191D23"),
-            darkGreen = Color.decode("#57707A"),
-            lightGreen = Color.decode("#7B919C"),
-            coldGray = Color.decode("#989DAA"),
-            offPink = Color.decode("#C5BAC4"),
-            rareWhite = Color.decode("#DEDCDC"),
+    public static Color darkBlack = Color.decode("#191D23"),
+            brickOrange = Color.decode("#aa4e32"),
+            boneWhite = Color.decode("#fffff2"),
+            offOrange = Color.decode("#f0af88"),
             lightBlue = Color.decode("#D0EFFF"),
-            pastelGreen = Color.decode("#A5D6B6");
+            pastelGreen = Color.decode("#A5D6B6"),
+            darkBlue = Color.decode("#b0cad8");
 
     // Fuente principal
-    public static Font mainFont = new Font("Open Sans", Font.PLAIN, 15);
+    public static Font mainFont = new Font("Product Sans", Font.PLAIN, 20);
 
     // Constructor y unica función
-    public Styles(JFrame frame, JLabel titleLabel, JTextField textField){
+    public Styles(JFrame frame, JLabel titleLabel, JTextField textField, JSeparator underlineTitle){
         this.frame = frame;
         this.titleLabel = titleLabel;
         this.textField = textField;
+        this.underlineTitle = underlineTitle;
 
         this.frame.setLayout(null);
-        this.frame.getContentPane().setBackground(coldGray);
+        this.frame.getContentPane().setBackground(boneWhite);
         this.frame.setResizable(false);
 
         // Obtiene cada componente del frame
         for (Component c: this.frame.getRootPane().getContentPane().getComponents()){
 
             c.setFont(mainFont); // Asigna la fuente
-            c.setForeground(darkBlue); // Y el color de la fuente
+            c.setForeground(darkBlack); // Y el color de la fuente
 
             if (c instanceof JButton){ // Para cada botón le asigna un Mouse Listener
                 c.addMouseListener(new MouseAdapter() {
@@ -46,32 +47,39 @@ public class Styles {
                     // Al pasar el cursor sobre un botón
                     @Override
                     public void mouseEntered(MouseEvent e) {
-                        c.setBackground(offPink);
-                        c.setForeground(darkBlue);
-                        c.setFont(mainFont.deriveFont(Font.BOLD, 20));
+                        c.setBackground(offOrange);
+                        c.setForeground(darkBlack);
+                        c.setFont(mainFont.deriveFont(Font.BOLD, 25));
                     }
 
                     // Al sacar el cursor sobre dicho botón
                     @Override
                     public void mouseExited(MouseEvent e) {
-                        c.setBackground(darkGreen);
-                        c.setForeground(rareWhite);
+                        c.setBackground(brickOrange);
+                        c.setForeground(boneWhite);
                         c.setFont(mainFont);
                     }
                 });
 
                 // Para todos los botones
-                c.setBackground(darkGreen);
-                c.setForeground(rareWhite);
+                c.setBackground(brickOrange);
+                c.setForeground(boneWhite);
             }
         }
 
-        this.titleLabel.setFont(new Font("Arial Black", Font.PLAIN, 30)); // Fuente para el título
+        this.titleLabel.setFont(new Font("Product Sans", Font.BOLD, 30)); // Fuente para el título
 
         // Fuente para el textfield con su debido color
         if (this.textField != null) {
-            this.textField.setBackground(lightGreen);
-            this.textField.setForeground(rareWhite);
+            this.textField.setBackground(boneWhite);
+            this.textField.setForeground(darkBlack);
         }
+
+        // Creador del Underline de los títulos.
+        if (this.underlineTitle != null) {
+            this.underlineTitle.setBounds(0, this.titleLabel.getY() + this.titleLabel.getHeight(), 430, 5);
+            underlineTitle.setBorder(BorderFactory.createLineBorder(offOrange, 3));
+        }
+
     }
 }

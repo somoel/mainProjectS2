@@ -15,6 +15,7 @@ public class FiboGUI extends JFrame implements ActionListener {
     private int n; // Variable a contar
 
     private JFrame backFrame; // Manejo de la ventana anterior
+    private JSeparator underlineTitle;
 
     // Constructor
     public FiboGUI(JFrame backFrame) {
@@ -24,39 +25,45 @@ public class FiboGUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Programa Fibonacci");
 
-        titleLabel = new JLabel("Fibonacci", SwingConstants.RIGHT);
-        titleLabel.setBounds(10, 10, 400, 50);
+        titleLabel = new JLabel("Fibonacci");
+        titleLabel.setVerticalAlignment(titleLabel.BOTTOM);
+        titleLabel.setBounds(10, 10, 400, 40);
         add(titleLabel);
 
-        nLabel = new JLabel("Ingrese la cantidad de números de la serie de Fibonacci");
-        nLabel.setBounds(10, 80, 400, 50);
+        underlineTitle = new JSeparator();
+        add(underlineTitle);
+
+        nLabel = new JLabel("<html><p style='text-align: center;'>Ingrese la cantidad de números<br>de la serie de Fibonacci</p></html>");
+        nLabel.setHorizontalAlignment(nLabel.CENTER);
+        nLabel.setBounds(10, 65, 400, 50);
         add(nLabel);
 
         nField = new JTextField();
         nField.setHorizontalAlignment(JTextField.CENTER);
-        nField.setBounds(115, 130, 70, 50);
+        nField.setBounds(95,130, 70, 50);
         nField.addActionListener(this);
         add(nField);
 
         calcFiboButton = new JButton("Calcular");
-        calcFiboButton.setBounds(195, 130, 120, 50);
+        calcFiboButton.setBounds(175, 130, 150, 50);
         calcFiboButton.addActionListener(this);
         add(calcFiboButton);
 
         resultLabel = new JLabel("Aquí debería aparecer el resultado");
         resultLabel.setVerticalAlignment(resultLabel.TOP);
+        resultLabel.setHorizontalAlignment(resultLabel.CENTER);
         resultLabel.setBounds(10, 200, 400, 210);
         add(resultLabel);
 
         backButton = new JButton("Volver");
-        backButton.setBounds(10, 430, 195, 30);
+        backButton.setBounds(10, 415, 195, 45);
         add(backButton);
 
         closeButton = new JButton("Cerrar");
-        closeButton.setBounds(215, 430, 195, 30);
+        closeButton.setBounds(215, 415, 195, 45);
         add(closeButton);
 
-        new Styles(this, titleLabel, nField); // Agrega colores
+        new Styles(this, titleLabel, nField, underlineTitle); // Agrega colores
 
         nField.setFont(Styles.mainFont.deriveFont(Font.PLAIN, 25));
 

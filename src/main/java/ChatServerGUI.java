@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.*;
 import java.time.LocalTime;
@@ -15,6 +17,7 @@ public class ChatServerGUI extends JFrame implements ActionListener {
     private JLabel titleLabel, serverIPLabel, clientIPLabel, clientMessageLabel;
     private JTextField textField;
     private JButton sendButton, backButton, closeButton;
+    private JSeparator separatorTitle;
     private BufferedReader input;
     private PrintWriter output;
     private ServerSocket serverSocket;
@@ -41,16 +44,19 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Chat: Servidor");
 
-        titleLabel = new JLabel("Chat: Servidor", SwingConstants.RIGHT);
-        titleLabel.setBounds(10, 10, 400, 50);
+        titleLabel = new JLabel("Chat: Servidor");
+        titleLabel.setBounds(10, 10, 400, 40);
         add(titleLabel);
 
-        serverIPLabel = new JLabel("IP del Servidor: " + ipLocal.getHostAddress());
+        separatorTitle = new JSeparator();
+        add(separatorTitle);
+
+        serverIPLabel = new JLabel("<html>IP del Servidor: <b>" + ipLocal.getHostAddress() + "</b></html>");
         serverIPLabel.setBounds(10, 80, 400, 30);
         add(serverIPLabel);
 
-        clientIPLabel = new JLabel("El cliente no se ha conectado. Esperando conexión...");
-        clientIPLabel.setBounds(10, 110, 400, 30);
+        clientIPLabel = new JLabel("<html>El cliente no se ha conectado.<br>Esperando conexión...</html>");
+        clientIPLabel.setBounds(10, 110, 400, 90);
         add(clientIPLabel);
 
         clientMessageLabel = new JLabel("Aquí aparecerán los mensajes del cliente.");
@@ -87,11 +93,17 @@ public class ChatServerGUI extends JFrame implements ActionListener {
             }
         });
 
-        new Styles(this, titleLabel,textField); // Agrega colores
+        new Styles(this, titleLabel,textField, separatorTitle); // Agrega colores
 
-        titleLabel.setBackground(Styles.lightBlue);
-        titleLabel.setForeground(Styles.darkBlue);
-        titleLabel.setOpaque(true);
+        separatorTitle.setBorder(BorderFactory.createLineBorder(Styles.darkBlue, 3));
+
+        sendButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                sendButton.setFont(Styles.mainFont);
+            }
+        });
+
 
 
         // Iniciar el hilo para recibir mensajes del cliente
