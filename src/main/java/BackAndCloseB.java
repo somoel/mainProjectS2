@@ -10,7 +10,7 @@ public class BackAndCloseB {
     private Runnable run;
 
     // Constructor y función principal
-    public BackAndCloseB (JFrame frame, JFrame backFrame, JButton backButton, JButton closeButton, Runnable run)  {
+    public BackAndCloseB(JFrame frame, JFrame backFrame, JButton backButton, JButton closeButton, Runnable run) {
         this.frame = frame; // Frame solicitado
         this.backFrame = backFrame; // Frame anterior al solicitado
         this.backButton = backButton; // Botón de volver
@@ -24,16 +24,20 @@ public class BackAndCloseB {
             this.frame.dispose(); // Cerrar la ventana actual
             try {
                 SwingUtilities.invokeLater(() -> backFrame.setVisible(true)); // Volver a la ventana principal
-            } catch (java.lang.NullPointerException ignored) {}
+            } catch (java.lang.NullPointerException ignored) {
+            }
         });
 
         // Evento del botón de cerrar
         this.closeButton.addActionListener(e -> {
-                    this.frame.dispose(); // Cerrar la ventana actual
-                    try {
-                        this.backFrame.dispose(); // Cierra la ventana anterior
-                    } catch (java.lang.NullPointerException ignored) {}
-                }
-        );
+            if (this.run != null) {
+                this.run.run();
+            }
+            this.frame.dispose(); // Cerrar la ventana actual
+            try {
+                this.backFrame.dispose(); // Cierra la ventana anterior
+            } catch (java.lang.NullPointerException ignored) {
+            }
+        });
     }
 }

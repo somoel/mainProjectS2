@@ -29,23 +29,23 @@ public class FiboGUI extends JFrame implements ActionListener {
         add(titleLabel);
 
         nLabel = new JLabel("Ingrese la cantidad de números de la serie de Fibonacci");
-        nLabel.setBounds(10, 100, 400, 50);
+        nLabel.setBounds(10, 80, 400, 50);
         add(nLabel);
 
         nField = new JTextField();
         nField.setHorizontalAlignment(JTextField.CENTER);
-        nField.setBounds(115, 150, 70, 50);
+        nField.setBounds(115, 130, 70, 50);
         nField.addActionListener(this);
         add(nField);
 
         calcFiboButton = new JButton("Calcular");
-        calcFiboButton.setBounds(195, 150, 120, 50);
+        calcFiboButton.setBounds(195, 130, 120, 50);
         calcFiboButton.addActionListener(this);
         add(calcFiboButton);
 
         resultLabel = new JLabel("Aquí debería aparecer el resultado");
         resultLabel.setVerticalAlignment(resultLabel.TOP);
-        resultLabel.setBounds(10, 210, 400, 210);
+        resultLabel.setBounds(10, 200, 400, 210);
         add(resultLabel);
 
         backButton = new JButton("Volver");

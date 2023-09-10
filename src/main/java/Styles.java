@@ -31,7 +31,7 @@ public class Styles {
         this.textField = textField;
 
         this.frame.setLayout(null);
-        this.frame.getContentPane().setBackground(lightGreen);
+        this.frame.getContentPane().setBackground(coldGray);
         this.frame.setResizable(false);
 
         // Obtiene cada componente del frame
@@ -70,7 +70,7 @@ public class Styles {
 
         // Fuente para el textfield con su debido color
         if (this.textField != null) {
-            this.textField.setBackground(coldGray);
+            this.textField.setBackground(lightGreen);
             this.textField.setForeground(rareWhite);
         }
     }
