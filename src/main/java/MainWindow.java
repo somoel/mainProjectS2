@@ -10,7 +10,6 @@ public class MainWindow extends JFrame implements ActionListener{
     // Elementos de la ventana
     private JLabel welcomeLabel, chatLabel;
     private JButton fiboButton, chatServerButton, chatClientButton, closeButton;
-    // TODO: Transladar el mainFont al decorator
 
 
     // Constructor de la ventana

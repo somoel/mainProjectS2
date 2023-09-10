@@ -1,6 +1,5 @@
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.*;
 import java.net.*;
 import java.time.LocalTime;
@@ -96,6 +95,12 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         new Styles(this, titleLabel, textField, separatorTitle); // Agrega colores
 
         separatorTitle.setBorder(BorderFactory.createLineBorder(Styles.pastelGreen, 3));
+
+        sendButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                sendButton.setFont(Styles.mainFont);
+            }
+        });
 
         // Iniciar el hilo para recibir mensajes del servidor
         Thread receiveMessages = new Thread(() -> {
