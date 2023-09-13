@@ -8,9 +8,11 @@ siguiendo el mismo estilo de IU
  */
 public class Styles {
     private JFrame frame;
-    private JLabel titleLabel;
+    private JLabel titleLabel, icon_label;
     private JTextField textField;
     private JSeparator underlineTitle;
+    private Image iconLogo = new ImageIcon("src/main/resources/blue_icon.png").getImage();
+
 
     // Paleta de colores usados en la interfaz
     public static Color darkBlack = Color.decode("#191D23"),
@@ -34,6 +36,9 @@ public class Styles {
         this.frame.setLayout(null);
         this.frame.getContentPane().setBackground(boneWhite);
         this.frame.setResizable(false);
+
+        // Ícono de la app
+        this.frame.setIconImage(iconLogo);
 
         // Obtiene cada componente del frame
         for (Component c : this.frame.getRootPane().getContentPane().getComponents()) {
@@ -66,6 +71,17 @@ public class Styles {
                 c.setForeground(boneWhite);
             }
         }
+
+        // Label del Ícono
+        icon_label = new JLabel();
+        icon_label.setBounds(titleLabel.getWidth() - 40, 10, 40, 40);
+
+        Icon iconImage = new ImageIcon(
+                iconLogo.getScaledInstance(icon_label.getWidth()
+                        , icon_label.getHeight(), Image.SCALE_SMOOTH));
+
+        icon_label.setIcon(iconImage);
+        this.frame.add(icon_label);
 
         this.titleLabel.setFont(mainFont.deriveFont(Font.BOLD, 30)); // Fuente para el título
 
