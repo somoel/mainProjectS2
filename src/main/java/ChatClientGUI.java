@@ -166,10 +166,8 @@ public class ChatClientGUI extends JFrame implements ActionListener {
 
 
                     serverMessageLabel.setText(HTMLString(fget_message));
-                    System.out.println("asig");
-                    SwingUtilities.invokeLater(() -> verticalScrollMessage.setValue(verticalScrollMessage.getMaximum()));
-
-                    System.out.println("nado");
+                    SwingUtilities.invokeLater(() ->
+                            verticalScrollMessage.setValue(verticalScrollMessage.getMaximum()));
                     last_message = fget_message;
                 }
             } catch (IOException e) {
@@ -229,7 +227,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         return show_time;
     }
 
-    class CustomScrollBarUI extends BasicScrollBarUI {
+    static class CustomScrollBarUI extends BasicScrollBarUI {
         private Color scrollBarColor = Styles.offOrange;
 
         @Override

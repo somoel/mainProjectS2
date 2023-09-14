@@ -17,15 +17,18 @@ usando un socket y un serversocket
 public class ChatServerGUI extends JFrame implements ActionListener {
 
     // Elementos de la ventana del servidor
-    private JLabel titleLabel, serverIPLabel, clientIPLabel, clientMessageLabel;
+    private JLabel titleLabel, serverIPLabel, clientIPLabel;
+    private JEditorPane clientMessageLabel;
     private JTextField textField;
     private JButton sendButton, backButton, closeButton;
     private JSeparator separatorTitle;
+    private JScrollPane scrollMessage;
+    private JScrollBar verticalScrollMessage;
     private BufferedReader input;
     private PrintWriter output;
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    private String input_message;
+    private String input_message, last_message = "", show_time, fget_message, fsend_message;
     private InetAddress ipLocal;
     private JFrame backFrame;
     private LocalTime time;
@@ -73,14 +76,30 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         add(serverIPLabel);
 
         clientIPLabel = new JLabel("<html>El cliente no se ha conectado.<br>Esperando conexión...</html>");
-        clientIPLabel.setVerticalAlignment(clientMessageLabel.TOP);
+        clientIPLabel.setVerticalAlignment(clientIPLabel.TOP);
         clientIPLabel.setBounds(10, 110, 400, 50);
         add(clientIPLabel);
 
-        clientMessageLabel = new JLabel("Aquí aparecerán los mensajes del cliente.");
-        clientMessageLabel.setVerticalAlignment(clientMessageLabel.BOTTOM);
+        clientMessageLabel = new JEditorPane();
+        clientMessageLabel.setContentType("text/html");
+        clientMessageLabel.setBackground(Styles.boneWhite);
+        clientMessageLabel.setText("<html><div style='font-size: 15px;" +
+                " font-family: \"Product Sans\", Roboto; text-align: center;'>" +
+                "<br><br><br><br><br><br>Ningún mensaje por ahora</div></html>");
+        clientMessageLabel.setEditable(false);
         clientMessageLabel.setBounds(10, 200, 400, 150);
         add(clientMessageLabel);
+
+        scrollMessage = new JScrollPane(clientMessageLabel);
+        scrollMessage.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        ChatClientGUI.CustomScrollBarUI customScrollBarUI = new ChatClientGUI.CustomScrollBarUI();
+        scrollMessage.getVerticalScrollBar().setUI(customScrollBarUI);
+
+        verticalScrollMessage = scrollMessage.getVerticalScrollBar();
+
+        scrollMessage.setBounds(10, 150, 400, 210);
+        add(scrollMessage);
+
 
         textField = new JTextField();
         textField.setBounds(10, 360, 300, 40);
@@ -142,12 +161,26 @@ public class ChatServerGUI extends JFrame implements ActionListener {
 
                 // Bucle que asigna el mensaje al label
                 while ((input_message = input.readLine()) != null) {
-                    time = LocalTime.now();
-                    clientMessageLabel.setText("<html><p style='color: #a4a6ad; '><i>El cliente dice: </i></p>"
-                            + input_message
-                            + " <p style='color: #a4a6ad; font-size: 10px; float: right;'><i>a las "
-                            + time.format(DateTimeFormatter.ofPattern("h:mm:ss a"))
-                            + "</i></p></html>");
+
+                    fget_message =
+                            last_message +
+                                    "<div style='font-family:\"Product Sans\",Roboto, Helvetica; font-size: 15px'>" +
+                                    "<p style='color: #a4a6ad; font-size: 13px;'><i>" +
+                                    "Cliente" +
+                                    "</i></p>" +
+                                    input_message +
+                                    "<span style='color: #a4a6ad; font-size: 10px; padding-left: 10px;'><i><br>" +
+                                    " a las " + getActualTime() +
+                                    "</i></span>" +
+                                    "</div>" +
+                                    "<div style='color: #fffff2; font-size: 4px'>" +
+                                    new String(new char[167]).replace("\0", "-") +
+                                    "</div>";
+
+                    clientMessageLabel.setText(HTMLString(fget_message));
+                    SwingUtilities.invokeLater(() ->
+                            verticalScrollMessage.setValue(verticalScrollMessage.getMaximum()));
+                    last_message = fget_message;
                 }
             } catch (IOException ignored) {
             }
@@ -163,6 +196,29 @@ public class ChatServerGUI extends JFrame implements ActionListener {
 
             try {
                 output.println(textField.getText());
+
+                fsend_message =
+                        last_message +
+                                "<div style='font-family:\"Product Sans\",Roboto, Helvetica;" +
+                                " font-size: 15px; text-align: right;'>" +
+                                "<p style='color: #a4a6ad; font-size: 13px;'><i>" +
+                                "Servidor (tú)" +
+                                "</i></p>" +
+                                textField.getText() +
+                                "<span style='color: #a4a6ad; font-size: 10px; padding-left: 10px;'><i><br>" +
+                                " a las " + getActualTime() +
+                                "</i></span>" +
+                                "</div>" +
+                                "<div style='color: #fffff2; font-size: 4px'>" +
+                                new String(new char[167]).replace("\0", "-") +
+                                "</div>";
+
+                clientMessageLabel.setText(HTMLString(fsend_message));
+
+                verticalScrollMessage.setValue(verticalScrollMessage.getMaximum());
+                last_message = fsend_message;
+
+
             } catch (NullPointerException e) {
                 JOptionPane.showMessageDialog(this, "No se pudo enviar el mensaje.",
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -170,6 +226,16 @@ public class ChatServerGUI extends JFrame implements ActionListener {
             textField.setText("");
 
         }
+    }
+
+    public String HTMLString(String string) {
+        return "<html>" + string + "</html>";
+    }
+
+    public String getActualTime() {
+        time = LocalTime.now(); // Captura el tiempo actual
+        show_time = time.format(DateTimeFormatter.ofPattern("h:mm:ss a"));
+        return show_time;
     }
 
     // Main
