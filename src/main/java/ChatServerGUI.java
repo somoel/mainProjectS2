@@ -24,14 +24,16 @@ public class ChatServerGUI extends JFrame implements ActionListener {
     private JSeparator separatorTitle;
     private JScrollPane scrollMessage;
     private JScrollBar verticalScrollMessage;
+
+    // Elementos del Socket
     private BufferedReader input;
     private PrintWriter output;
     private ServerSocket serverSocket;
     private Socket clientSocket;
     private String input_message, last_message = "", show_time, fget_message, fsend_message;
-    private InetAddress ipLocal;
-    private JFrame backFrame;
-    private LocalTime time;
+    private JFrame backFrame; // Obtener el backframe
+    private LocalTime time; // Tiempo para cada mensaje
+    private InetAddress ipLocal; // IP local para mostrar
 
     // Constructor
     public ChatServerGUI(JFrame backFrame) {
@@ -90,6 +92,7 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         clientMessageLabel.setBounds(10, 200, 400, 150);
         add(clientMessageLabel);
 
+        // Scrollbar
         scrollMessage = new JScrollPane(clientMessageLabel);
         scrollMessage.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         ChatClientGUI.CustomScrollBarUI customScrollBarUI = new ChatClientGUI.CustomScrollBarUI();
@@ -162,25 +165,26 @@ public class ChatServerGUI extends JFrame implements ActionListener {
                 // Bucle que asigna el mensaje al label
                 while ((input_message = input.readLine()) != null) {
 
+                    // Darle formato HTML al mensaje recibido
                     fget_message =
-                            last_message +
+                            last_message + // Mensajes anteriores
                                     "<div style='font-family:\"Product Sans\",Roboto, Helvetica; font-size: 15px'>" +
                                     "<p style='color: #a4a6ad; font-size: 13px;'><i>" +
                                     "Cliente" +
                                     "</i></p>" +
-                                    input_message +
+                                    input_message + // Mensaje recibido
                                     "<span style='color: #a4a6ad; font-size: 10px; padding-left: 10px;'><i><br>" +
-                                    " a las " + getActualTime() +
+                                    " a las " + getActualTime() + // Hora
                                     "</i></span>" +
                                     "</div>" +
                                     "<div style='color: #fffff2; font-size: 4px'>" +
-                                    new String(new char[167]).replace("\0", "-") +
+                                    new String(new char[167]).replace("\0", "-") + // Espacios
                                     "</div>";
 
-                    clientMessageLabel.setText(HTMLString(fget_message));
+                    clientMessageLabel.setText(HTMLString(fget_message)); // Asigna el texto
                     SwingUtilities.invokeLater(() ->
-                            verticalScrollMessage.setValue(verticalScrollMessage.getMaximum()));
-                    last_message = fget_message;
+                            verticalScrollMessage.setValue(verticalScrollMessage.getMaximum())); // Bajar el scrollbar
+                    last_message = fget_message; // Obtener el mensaje recibido y sumarlo a la cola de mensajes.
                 }
             } catch (IOException ignored) {
             }
@@ -197,26 +201,27 @@ public class ChatServerGUI extends JFrame implements ActionListener {
             try {
                 output.println(textField.getText());
 
+                // Mostrar un eco del mensaje enviado sumado al mensaje anterior
                 fsend_message =
-                        last_message +
+                        last_message + // Mensajes anteriores
                                 "<div style='font-family:\"Product Sans\",Roboto, Helvetica;" +
-                                " font-size: 15px; text-align: right;'>" +
-                                "<p style='color: #a4a6ad; font-size: 13px;'><i>" +
-                                "Servidor (tú)" +
-                                "</i></p>" +
-                                textField.getText() +
-                                "<span style='color: #a4a6ad; font-size: 10px; padding-left: 10px;'><i><br>" +
-                                " a las " + getActualTime() +
-                                "</i></span>" +
+                                " font-size: 15px; text-align: right;'>" + // Alineación a la derecha
+                                    "<p style='color: #a4a6ad; font-size: 13px;'><i>" +
+                                        "Servidor (tú)" +
+                                    "</i></p>" +
+                                    textField.getText() + // Texto enviado
+                                    "<span style='color: #a4a6ad; font-size: 10px; padding-left: 10px;'><i><br>" +
+                                        " a las " + getActualTime() + // Hora
+                                    "</i></span>" +
                                 "</div>" +
                                 "<div style='color: #fffff2; font-size: 4px'>" +
-                                new String(new char[167]).replace("\0", "-") +
+                                new String(new char[167]).replace("\0", "-") + // Espacios
                                 "</div>";
 
-                clientMessageLabel.setText(HTMLString(fsend_message));
+                clientMessageLabel.setText(HTMLString(fsend_message)); // Asigna el texto
 
-                verticalScrollMessage.setValue(verticalScrollMessage.getMaximum());
-                last_message = fsend_message;
+                verticalScrollMessage.setValue(verticalScrollMessage.getMaximum()); // Bajar el scrollbar
+                last_message = fsend_message; // Asignar al historial
 
 
             } catch (NullPointerException e) {
@@ -228,10 +233,12 @@ public class ChatServerGUI extends JFrame implements ActionListener {
         }
     }
 
+    // Agregar etiquetas HTML para dar formato
     public String HTMLString(String string) {
         return "<html>" + string + "</html>";
     }
 
+    // Mostrar la hora actual
     public String getActualTime() {
         time = LocalTime.now(); // Captura el tiempo actual
         show_time = time.format(DateTimeFormatter.ofPattern("h:mm:ss a"));
