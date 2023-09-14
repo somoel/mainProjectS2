@@ -55,11 +55,6 @@ public class FiboGUI extends JFrame implements ActionListener {
         resultLabel.setBounds(10, 200, 400, 210);
         add(resultLabel);
 
-        JScrollPane scrollMessage = new JScrollPane(resultLabel);
-        scrollMessage.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scrollMessage.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        add(scrollMessage);
-
         backButton = new JButton("Volver");
         backButton.setBounds(10, 415, 195, 45);
         add(backButton);

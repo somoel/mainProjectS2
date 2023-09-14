@@ -89,7 +89,7 @@ public class MainWindow extends JFrame implements ActionListener {
             setVisible(false);
 
             ChatServerGUI chatServerGUI = new ChatServerGUI(this);
-            chatServerGUI.setBounds(0, 0, 430, 500);
+            chatServerGUI.setBounds(0, 0, 430, 800);
             chatServerGUI.setVisible(true);
             chatServerGUI.setLocationRelativeTo(null);
 
@@ -100,7 +100,7 @@ public class MainWindow extends JFrame implements ActionListener {
         if (event.getSource() == chatClientButton) {
             setVisible(false);
             ChatClientGUI ChatClientGUI = new ChatClientGUI(this);
-            ChatClientGUI.setBounds(0, 0, 430, 500);
+            ChatClientGUI.setBounds(0, 0, 430, 800);
             ChatClientGUI.setVisible(true);
             ChatClientGUI.setLocationRelativeTo(null);
 

@@ -78,10 +78,12 @@ public class Styles {
         icon_label = new JLabel();
         icon_label.setBounds(titleLabel.getWidth() - 40, 10, 40, 40);
 
+        // Redimensión del Ícono para que quede al tamaño del Label
         Icon iconImage = new ImageIcon(
                 iconLogo.getScaledInstance(icon_label.getWidth()
                         , icon_label.getHeight(), Image.SCALE_SMOOTH));
 
+        // Agrega el ícono al JLabel
         icon_label.setIcon(iconImage);
         this.frame.add(icon_label);
 
