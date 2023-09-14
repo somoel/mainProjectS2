@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicScrollBarUI;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -15,14 +17,18 @@ usando un socket
 public class ChatClientGUI extends JFrame implements ActionListener {
 
     // Elementos de la ventana del cliente.
-    private JLabel titleLabel, serverIPLabel, clientIPLabel, serverMessageLabel;
+    private JLabel titleLabel, serverIPLabel, clientIPLabel;
+    private JEditorPane serverMessageLabel;
     private JTextField textField;
     private JButton sendButton, backButton, closeButton;
     private JSeparator separatorTitle;
+    private JScrollPane scrollMessage;
+    private JScrollBar verticalScrollMessage;
     private BufferedReader input;
     private PrintWriter output;
     private Socket socket;
-    private String input_message, server_IP, ip_local = "Error";
+    private String input_message, server_IP, ip_local = "Error",
+            last_message = "", show_time, fget_message, fsend_message;
     private JFrame backFrame;
     private LocalTime time;
     private InetAddress ipLocal;
@@ -78,10 +84,28 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         clientIPLabel.setBounds(10, 110, 400, 30);
         add(clientIPLabel);
 
-        serverMessageLabel = new JLabel("Aquí aparecerán los mensajes del servidor.");
-        serverMessageLabel.setVerticalAlignment(serverMessageLabel.BOTTOM);
-        serverMessageLabel.setBounds(10, 200, 400, 150);
+
+        serverMessageLabel = new JEditorPane();
+        serverMessageLabel.setContentType("text/html");
+        serverMessageLabel.setBackground(Styles.boneWhite);
+        serverMessageLabel.setText("<html><div style='font-size: 15px; font-family: \"Product Sans\", Roboto; text-align: center;'><br><br><br><br><br><br>Ningún mensaje por ahora</div></html>");
+        serverMessageLabel.setEditable(false);
+        serverMessageLabel.setBounds(10, 150, 400, 210);
         add(serverMessageLabel);
+
+
+        scrollMessage = new JScrollPane(serverMessageLabel);
+        scrollMessage.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        CustomScrollBarUI customScrollBarUI = new CustomScrollBarUI();
+        scrollMessage.getVerticalScrollBar().setUI(customScrollBarUI);
+
+        verticalScrollMessage = scrollMessage.getVerticalScrollBar();
+
+
+
+        scrollMessage.setBounds(10, 150, 400, 210);
+        add(scrollMessage);
+
 
         textField = new JTextField();
         textField.setBounds(10, 360, 300, 40);
@@ -121,12 +145,29 @@ public class ChatClientGUI extends JFrame implements ActionListener {
 
                 // Bucle que asigna el mensaje al label
                 while ((input_message = input.readLine()) != null) {
-                    time = LocalTime.now(); // Captura el tiempo actual
-                    serverMessageLabel.setText("<html><p style='color: #a4a6ad; '><i>El servidor dice: </i></p>"
-                            + input_message
-                            + " <p style='color: #a4a6ad; font-size: 10px; float: right;'><i>a las "
-                            + time.format(DateTimeFormatter.ofPattern("h:mm:ss a"))
-                            + "</i></p></html>");
+
+
+                    fget_message =
+                            last_message +
+                                    "<div style='font-family:\"Product Sans\",Roboto, Helvetica; font-size: 15px'>" +
+                                        "<p style='color: #a4a6ad; font-size: 13px;'><i>" +
+                                            "Servidor: " +
+                                        "</i></p>" +
+                                        input_message +
+                                        "<span style='color: #a4a6ad; font-size: 10px; padding-left: 10px;'><i><br> a las " + getActualTime() +
+                                        "</i></span>" +
+                                    "</div>" +
+                                    "<div style='color: #fffff2; font-size: 4px'>" +
+                                        new String(new char[167]).replace("\0", "-") +
+                                    "</div>";
+
+
+                    serverMessageLabel.setText(HTMLString(fget_message));
+                    System.out.println("asig");
+                    SwingUtilities.invokeLater(() -> verticalScrollMessage.setValue(verticalScrollMessage.getMaximum()));
+
+                    System.out.println("nado");
+                    last_message = fget_message;
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this, "El servidor cerró la conexión.",
@@ -145,6 +186,26 @@ public class ChatClientGUI extends JFrame implements ActionListener {
 
             try {
                 output.println(textField.getText());
+
+                fsend_message =
+                        last_message +
+                                "<div style='font-family:\"Product Sans\",Roboto, Helvetica; font-size: 15px; text-align: right;'>" +
+                                    "<p style='color: #a4a6ad; font-size: 13px;'><i>" +
+                                        "Cliente (tú): " +
+                                    "</i></p>" +
+                                    textField.getText() +
+                                    "<span style='color: #a4a6ad; font-size: 10px; padding-left: 10px;'><i><br> a las " + getActualTime() +
+                                    "</i></span>" +
+                                "</div>" +
+                                "<div style='color: #fffff2; font-size: 4px'>" +
+                                new String(new char[167]).replace("\0", "-") +
+                                "</div>";
+
+                serverMessageLabel.setText(HTMLString(fsend_message));
+
+                verticalScrollMessage.setValue(verticalScrollMessage.getMaximum());
+                last_message = fsend_message;
+
             } catch (NullPointerException e) {
                 JOptionPane.showMessageDialog(this, "Output desconocido",
                         "Error", JOptionPane.ERROR_MESSAGE);
@@ -153,6 +214,51 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         }
     }
 
+    public String HTMLString(String string) {
+        return "<html>" + string + "</html>";
+    }
+
+    public String getActualTime() {
+        time = LocalTime.now(); // Captura el tiempo actual
+        show_time = time.format(DateTimeFormatter.ofPattern("h:mm:ss a"));
+        return show_time;
+    }
+
+    class CustomScrollBarUI extends BasicScrollBarUI {
+        private Color scrollBarColor = Styles.offOrange;
+
+        @Override
+        protected void configureScrollBarColors() {
+            thumbColor = scrollBarColor;
+            thumbDarkShadowColor = scrollBarColor.darker();
+            thumbHighlightColor = scrollBarColor.brighter();
+            thumbLightShadowColor = scrollBarColor;
+            trackColor = Styles.boneWhite;
+            trackHighlightColor = Color.WHITE;
+        }
+
+        @Override
+        protected JButton createDecreaseButton(int orientation) {
+            return createZeroButton();
+        }
+
+        @Override
+        protected JButton createIncreaseButton(int orientation) {
+            return createZeroButton();
+        }
+
+        private JButton createZeroButton() {
+            JButton button = new JButton();
+            Dimension zeroDim = new Dimension(0, 0);
+            button.setPreferredSize(zeroDim);
+            button.setMinimumSize(zeroDim);
+            button.setMaximumSize(zeroDim);
+            return button;
+        }
+
+
+
+    }
     // Main
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

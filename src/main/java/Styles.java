@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 /* Decora todas las ventanas de manera uniforme
 siguiendo el mismo estilo de IU
  */
+
+// TODO: Organizar bien el constructor y hacer varios métodos.
 public class Styles {
     private JFrame frame;
     private JLabel titleLabel, icon_label;
