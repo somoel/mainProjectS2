@@ -88,7 +88,9 @@ public class ChatClientGUI extends JFrame implements ActionListener {
         serverMessageLabel = new JEditorPane();
         serverMessageLabel.setContentType("text/html");
         serverMessageLabel.setBackground(Styles.boneWhite);
-        serverMessageLabel.setText("<html><div style='font-size: 15px; font-family: \"Product Sans\", Roboto; text-align: center;'><br><br><br><br><br><br>Ningún mensaje por ahora</div></html>");
+        serverMessageLabel.setText("<html><div style='font-size: 15px;" +
+                " font-family: \"Product Sans\", Roboto; text-align: center;'>" +
+                "<br><br><br><br><br><br>Ningún mensaje por ahora</div></html>");
         serverMessageLabel.setEditable(false);
         serverMessageLabel.setBounds(10, 150, 400, 210);
         add(serverMessageLabel);
@@ -154,7 +156,8 @@ public class ChatClientGUI extends JFrame implements ActionListener {
                                             "Servidor" +
                                         "</i></p>" +
                                         input_message +
-                                        "<span style='color: #a4a6ad; font-size: 10px; padding-left: 10px;'><i><br> a las " + getActualTime() +
+                                        "<span style='color: #a4a6ad; font-size: 10px; padding-left: 10px;'><i><br>" +
+                                            " a las " + getActualTime() +
                                         "</i></span>" +
                                     "</div>" +
                                     "<div style='color: #fffff2; font-size: 4px'>" +
@@ -189,12 +192,14 @@ public class ChatClientGUI extends JFrame implements ActionListener {
 
                 fsend_message =
                         last_message +
-                                "<div style='font-family:\"Product Sans\",Roboto, Helvetica; font-size: 15px; text-align: right;'>" +
+                                "<div style='font-family:\"Product Sans\",Roboto, Helvetica;" +
+                                " font-size: 15px; text-align: right;'>" +
                                     "<p style='color: #a4a6ad; font-size: 13px;'><i>" +
                                         "Cliente (tú)" +
                                     "</i></p>" +
                                     textField.getText() +
-                                    "<span style='color: #a4a6ad; font-size: 10px; padding-left: 10px;'><i><br> a las " + getActualTime() +
+                                    "<span style='color: #a4a6ad; font-size: 10px; padding-left: 10px;'><i><br>" +
+                                        " a las " + getActualTime() +
                                     "</i></span>" +
                                 "</div>" +
                                 "<div style='color: #fffff2; font-size: 4px'>" +
