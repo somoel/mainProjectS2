@@ -17,13 +17,14 @@ public class BackAndCloseB {
         this.closeButton = closeButton; // Botón de cerrrar
         this.run = run; // Ejecutar alguna acción al usar el botón de volver
 
+        // Evento del botón de volver
         this.backButton.addActionListener(e -> {
             if (this.run != null) {
                 this.run.run(); // Runnear
             }
             this.frame.dispose(); // Cerrar la ventana actual
             try {
-                SwingUtilities.invokeLater(() -> backFrame.setVisible(true)); // Volver a la ventana principal
+                SwingUtilities.invokeLater(() -> this.backFrame.setVisible(true)); // Volver a la ventana principal
             } catch (java.lang.NullPointerException ignored) {
             }
         });

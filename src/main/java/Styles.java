@@ -10,7 +10,9 @@ siguiendo el mismo estilo de IU
 // TODO: Organizar bien el constructor y hacer varios métodos.
 public class Styles {
     private JFrame frame;
-    private JLabel titleLabel, icon_label;
+    private JLabel titleLabel;
+    private JTextField[] textFields;
+    private JLabel icon_label;
     private JTextField textField;
     private JSeparator underlineTitle;
     private Image iconLogo = new ImageIcon("src/main/resources/blue_icon.png").getImage();
@@ -23,18 +25,14 @@ public class Styles {
             offOrange = Color.decode("#f0af88"),
             lightBlue = Color.decode("#D0EFFF"),
             pastelGreen = Color.decode("#A5D6B6"),
-            darkBlue = Color.decode("#b0cad8");
+            darkBlue = Color.decode("#b0cad8"),
+            defaultBoder = Color.decode("#7a8a99");
 
     // Fuente principal
     public static Font mainFont = new Font("Product Sans", Font.PLAIN, 20);
 
-    // Constructor y unica función
-    public Styles(JFrame frame, JLabel titleLabel, JTextField textField, JSeparator underlineTitle) {
-        this.frame = frame;
-        this.titleLabel = titleLabel;
-        this.textField = textField;
-        this.underlineTitle = underlineTitle;
-
+    // Estilos básicos para dividir correctamente los constructores
+    private void BasicStyles(){
         this.frame.setLayout(null);
         this.frame.getContentPane().setBackground(boneWhite);
         this.frame.setResizable(false);
@@ -89,17 +87,46 @@ public class Styles {
 
         this.titleLabel.setFont(mainFont.deriveFont(Font.BOLD, 30)); // Fuente para el título
 
+        // Creador del Underline de los títulos.
+        if (this.underlineTitle != null) {
+            this.underlineTitle.setBounds(0, this.titleLabel.getY() + this.titleLabel.getHeight(), 430, 5);
+            underlineTitle.setBorder(BorderFactory.createLineBorder(offOrange, 3));
+        }
+    }
+
+
+
+    // Constructor y unica función
+    public Styles(JFrame frame, JLabel titleLabel, JTextField textField, JSeparator underlineTitle) {
+        this.frame = frame;
+        this.titleLabel = titleLabel;
+        this.textField = textField;
+        this.underlineTitle = underlineTitle;
+
+        BasicStyles();
+
         // Fuente para el textfield con su debido color
         if (this.textField != null) {
             this.textField.setBackground(boneWhite);
             this.textField.setForeground(darkBlack);
         }
 
-        // Creador del Underline de los títulos.
-        if (this.underlineTitle != null) {
-            this.underlineTitle.setBounds(0, this.titleLabel.getY() + this.titleLabel.getHeight(), 430, 5);
-            underlineTitle.setBorder(BorderFactory.createLineBorder(offOrange, 3));
-        }
+    }
 
+    public Styles(JFrame frame, JLabel titleLabel, JTextField[] textFields, JSeparator underlineTitle) {
+        this.frame = frame;
+        this.titleLabel = titleLabel;
+        this.textFields = textFields;
+        this.underlineTitle = underlineTitle;
+
+        BasicStyles();
+
+        // Fuente para el textfield con su debido color
+        for (JTextField textF: this.textFields) {
+            if (textF != null) {
+                textF.setBackground(boneWhite);
+                textF.setForeground(darkBlack);
+            }
+        }
     }
 }

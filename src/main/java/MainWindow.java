@@ -13,6 +13,7 @@ public class MainWindow extends JFrame implements ActionListener {
     // Elementos de la ventana
     private JLabel welcomeLabel, chatLabel;
     private JButton fiboButton, chatServerButton, chatClientButton, closeButton;
+    private JTextField tfNull;
 
 
     // Constructor de la ventana
@@ -51,7 +52,7 @@ public class MainWindow extends JFrame implements ActionListener {
         closeButton.addActionListener(this);
         add(closeButton);
 
-        new Styles(this, welcomeLabel, null, null); // Agrega colores
+        new Styles(this, welcomeLabel, tfNull, null); // Agrega colores
 
         for (Component c : getRootPane().getContentPane().getComponents()) {
             if (c instanceof JButton) {

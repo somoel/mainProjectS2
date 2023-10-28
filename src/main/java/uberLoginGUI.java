@@ -2,16 +2,24 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ubernardoGUI extends JFrame implements ActionListener{
+/* Inicio de Sesión de Ubernardo
+ */
+public class uberLoginGUI extends JFrame implements ActionListener{
 
-    // TODO: Eliminar la implementación de Action Listener
+    /*TODO: Eliminar la implementación de Action Listener
+        Randomizar la bienvenida
+        Agregar restricciones de entrada
+     */
 
     private JFrame backFrame;
     private JLabel titleLabel, welcomeLabel, cedulaLabel, passLabel, orRegisterLabel;
     private JButton loginButton, registerButton, backButton, closeButton;
-    private JTextField cedulaField, passField;
+    private JTextField cedulaField;
+    private JPasswordField passField;
     private JSeparator separatorTitle;
-    public ubernardoGUI(JFrame backFrame){
+
+    // Constructor de la ventana
+    public uberLoginGUI(JFrame backFrame){
         this.backFrame = backFrame;
 
         setLayout(null);
@@ -36,7 +44,6 @@ public class ubernardoGUI extends JFrame implements ActionListener{
 
         cedulaField = new JTextField();
         cedulaField.setBounds(10, 140, 400, 30);
-        cedulaField.addActionListener(this);
         add(cedulaField);
 
 
@@ -44,7 +51,7 @@ public class ubernardoGUI extends JFrame implements ActionListener{
         passLabel.setBounds(10, 190, 400, 30);
         add(passLabel);
 
-        passField = new JTextField();
+        passField = new JPasswordField();
         passField.setBounds(10, 220, 400, 30);
         passField.addActionListener(this);
         add(passField);
@@ -78,21 +85,27 @@ public class ubernardoGUI extends JFrame implements ActionListener{
 
         new BackAndCloseB(this, this.backFrame, backButton, closeButton, null);
 
-        new Styles(this, titleLabel, cedulaField, separatorTitle);
+        new Styles(this, titleLabel, new JTextField[]{cedulaField, passField}, separatorTitle);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (e.getSource() == registerButton){
+            dispose();
+            uberRegisterGUI uberRGUI = new uberRegisterGUI(null);
+            uberRGUI.setBounds(0, 0, 430, 700);
+            uberRGUI.setLocationRelativeTo(null);
+            uberRGUI.setVisible(true);
+        }
     }
 
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            ubernardoGUI uberGUI = new ubernardoGUI(null);
-            uberGUI.setBounds(0, 0, 430, 500);
-            uberGUI.setLocationRelativeTo(null);
-            uberGUI.setVisible(true);
+            uberLoginGUI uberLGUI = new uberLoginGUI(null);
+            uberLGUI.setBounds(0, 0, 430, 500);
+            uberLGUI.setLocationRelativeTo(null);
+            uberLGUI.setVisible(true);
         });
     }
 
