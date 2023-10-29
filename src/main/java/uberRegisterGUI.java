@@ -14,10 +14,6 @@ import java.awt.event.MouseEvent;
  */
 public class uberRegisterGUI extends JFrame implements ActionListener {
 
-    /* TODO: eliminar el actionlistener
-        Optimizar el checkEntrys
-     */
-
     private JFrame backFrame;
     private JLabel titleLabel, welcomeLabel, cedulaLabel, passLabel,
             phoneLabel, orLoginLabel, nameLabel, userTypeLabel;

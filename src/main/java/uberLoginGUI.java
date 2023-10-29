@@ -8,10 +8,6 @@ import java.awt.event.MouseEvent;
  */
 public class uberLoginGUI extends JFrame implements ActionListener{
 
-    /*TODO: Eliminar la implementación de Action Listener
-        Randomizar la bienvenida
-     */
-
     private JFrame backFrame;
     private JLabel titleLabel, welcomeLabel, cedulaLabel, passLabel, orRegisterLabel;
     private JButton loginButton, registerButton, backButton, closeButton, showPassButton;
