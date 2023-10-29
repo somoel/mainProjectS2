@@ -11,8 +11,8 @@ todos los módulos adyacentes
 public class MainWindow extends JFrame implements ActionListener {
 
     // Elementos de la ventana
-    private JLabel welcomeLabel, chatLabel;
-    private JButton fiboButton, chatServerButton, chatClientButton, closeButton;
+    private JLabel welcomeLabel, chatLabel, pongLabel, uberLabel;
+    private JButton fiboButton, chatServerButton, chatClientButton, closeButton, pongButton, uberButton;
     private JTextField tfNull;
 
 
@@ -28,27 +28,49 @@ public class MainWindow extends JFrame implements ActionListener {
         add(welcomeLabel);
 
         fiboButton = new JButton("¿Fibonacci?");
-        fiboButton.setBounds(10, 170, 400, 70);
+        fiboButton.setBounds(10, 120, 400, 50);
         fiboButton.addActionListener(this);
         add(fiboButton);
 
 
-        chatLabel = new JLabel("¿Ó el chat?", SwingConstants.CENTER);
-        chatLabel.setBounds(10, 250, 400, 50);
+        chatLabel = new JLabel("¿Ó el chat?");
+        chatLabel.setBounds(10, 190, 400, 30);
         add(chatLabel);
 
         chatServerButton = new JButton("Servidor");
-        chatServerButton.setBounds(10, 300, 195, 70);
+        chatServerButton.setBounds(10, 220, 195, 50);
         chatServerButton.addActionListener(this);
         add(chatServerButton);
 
         chatClientButton = new JButton("Cliente");
-        chatClientButton.setBounds(215, 300, 195, 70);
+        chatClientButton.setBounds(215, 220, 195, 50);
         chatClientButton.addActionListener(this);
         add(chatClientButton);
 
+
+        pongLabel = new JLabel("Ah, ¿quieres jugar algo?");
+        pongLabel.setBounds(10, 290, 400, 30);
+        add(pongLabel);
+
+        pongButton = new JButton("Pong");
+        pongButton.setBounds(10, 320, 400, 50);
+        pongButton.addActionListener(this);
+        add(pongButton);
+
+
+        uberLabel = new JLabel("Entonces, ¿un uber?");
+        uberLabel.setBounds(10, 390, 400, 30);
+        add(uberLabel);
+
+        uberButton = new JButton("Ubernardo");
+        uberButton.setBounds(10, 420, 400, 50);
+        uberButton.addActionListener(this);
+        add(uberButton);
+
+
+
         closeButton = new JButton("Mejor me voy");
-        closeButton.setBounds(10, 490, 400, 70);
+        closeButton.setBounds(10, 510, 400, 50);
         closeButton.addActionListener(this);
         add(closeButton);
 
@@ -69,8 +91,6 @@ public class MainWindow extends JFrame implements ActionListener {
             }
         }
 
-
-        chatLabel.setFont(Styles.mainFont.deriveFont(Font.BOLD, 20));
     }
 
     // Acción de los botones
@@ -105,6 +125,28 @@ public class MainWindow extends JFrame implements ActionListener {
             ChatClientGUI.setVisible(true);
             ChatClientGUI.setLocationRelativeTo(null);
 
+        }
+
+        // Botón Pong
+        if (event.getSource() == pongButton) {
+            dispose();
+            JFrame CristhianFrame = new JFrame("Ole");
+            CristhianFrame.setBounds(0, 0, 430, 500);
+            CristhianFrame.setVisible(true);
+            CristhianFrame.setLocationRelativeTo(null);
+
+            JLabel cLabel = new JLabel("Parce, porfa. Ponga el pong", SwingConstants.CENTER);
+            cLabel.setBounds(0, 0, 430, 500);
+            CristhianFrame.add(cLabel);
+        }
+
+        // Botón Ubernardo
+        if (event.getSource() == uberButton){
+            setVisible(false);
+            uberLoginGUI uberLGUI = new uberLoginGUI(this);
+            uberLGUI.setBounds(0, 0, 430, 500);
+            uberLGUI.setVisible(true);
+            uberLGUI.setLocationRelativeTo(null);
         }
 
         // Botón Cerrar

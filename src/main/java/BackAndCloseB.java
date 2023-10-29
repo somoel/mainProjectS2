@@ -19,21 +19,19 @@ public class BackAndCloseB {
 
         // Evento del botón de volver
         this.backButton.addActionListener(e -> {
-            if (this.run != null) {
+            if (this.run != null)
                 this.run.run(); // Runnear
-            }
+
             this.frame.dispose(); // Cerrar la ventana actual
-            try {
+            if (this.backFrame != null)
                 SwingUtilities.invokeLater(() -> this.backFrame.setVisible(true)); // Volver a la ventana principal
-            } catch (java.lang.NullPointerException ignored) {
-            }
+
         });
 
         // Evento del botón de cerrar
         this.closeButton.addActionListener(e -> {
-            if (this.run != null) {
+            if (this.run != null)
                 this.run.run();
-            }
             this.frame.dispose(); // Cerrar la ventana actual
             try {
                 this.backFrame.dispose(); // Cierra la ventana anterior

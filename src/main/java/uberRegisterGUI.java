@@ -139,7 +139,7 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
         add(closeButton);
 
 
-        new BackAndCloseB(this, this.backFrame, backButton, closeButton, null);
+        new BackAndCloseB(this, this.backFrame, backButton, closeButton, () -> MainWindow.main(null));
 
         new Styles(this, titleLabel,
                 new JTextField[]{nameField, cedulaField, passField, phoneField}, separatorTitle);

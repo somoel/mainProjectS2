@@ -55,6 +55,7 @@ public class FiboGUI extends JFrame implements ActionListener {
 
         resultLabel = new JEditorPane();
         resultLabel.setContentType("text/html");
+        resultLabel.setEditable(false);
         resultLabel.setBackground(Styles.boneWhite);
         resultLabel.setText("<html><div style='font-size: 15px; font-family: \"Product Sans\"," +
                 " Roboto; text-align: center;'>" +
@@ -103,41 +104,42 @@ public class FiboGUI extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this, "Error\n\nDebe ser un número positivo.");
             } else if ( n > 93) {
                 JOptionPane.showMessageDialog(this, "Error\n\nNo puede pasar de 93.");
-            }
-            nField.setText("");
+            } else {
+                nField.setText("");
 
-            // Devolución del arreglo con los números de la secuencia
+                // Devolución del arreglo con los números de la secuencia
 
-            switch (n) {
-                case 0 -> result = "Ningún número";
-                case 1 -> result = "0";
-                case 2 -> result = "0, 1";
-                default -> {
+                switch (n) {
+                    case 0 -> result = "Ningún número";
+                    case 1 -> result = "0";
+                    case 2 -> result = "0, 1";
+                    default -> {
 
-                    // se crea un arreglo del tamaño que el usuario decida
-                    long[] arreglo = new long[n];
-                    arreglo[0] = 0;
-                    arreglo[1] = 1;
+                        // se crea un arreglo del tamaño que el usuario decida
+                        long[] arreglo = new long[n];
+                        arreglo[0] = 0;
+                        arreglo[1] = 1;
 
-                    /* se crea una iteracion con la variable i que permitira
-                    sumar los numeros anteriores para obtener la
-                    secuencia fibonacci*/
-                    for (int i = 2; i < n; i++) {
-                        arreglo[i] = arreglo[i - 1] + arreglo[i - 2];
+                        /* se crea una iteracion con la variable i que permitira
+                        sumar los numeros anteriores para obtener la
+                        secuencia fibonacci*/
+                        for (int i = 2; i < n; i++) {
+                            arreglo[i] = arreglo[i - 1] + arreglo[i - 2];
+                        }
+
+                        result = Arrays.toString(arreglo).substring(1, Arrays.toString(arreglo).length() - 1);
+
                     }
-
-                    result = Arrays.toString(arreglo).substring(1, Arrays.toString(arreglo).length() - 1);
-
                 }
+                // impresión de la secuencia fiboonacci
+                resultLabel.setText(
+                        "<html>" +
+                                "<div style='font-size: 40px; font-family: \"Product Sans\", Roboto; text-align: center;'>" +
+                                result +
+                                "</div></html>");
+
+
             }
-            // impresión de la secuencia fiboonacci
-            resultLabel.setText(
-                    "<html>" +
-                            "<div style='font-size: 40px; font-family: \"Product Sans\", Roboto; text-align: center;'>" +
-                            result +
-                            "</div></html>");
-
-
         }
     }
 

@@ -85,7 +85,7 @@ public class uberLoginGUI extends JFrame implements ActionListener{
         add(closeButton);
 
 
-        new BackAndCloseB(this, this.backFrame, backButton, closeButton, null);
+        new BackAndCloseB(this, this.backFrame, backButton, closeButton, () -> MainWindow.main(null));
 
         new Styles(this, titleLabel, new JTextField[]{cedulaField, passField}, separatorTitle);
 
