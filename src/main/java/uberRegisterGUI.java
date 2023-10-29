@@ -4,10 +4,7 @@ import javax.swing.plaf.basic.BasicComboBoxUI;
 import javax.swing.plaf.basic.BasicComboPopup;
 import javax.swing.plaf.basic.ComboPopup;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 /* Ventana para registrarse en Ubernardo
 
@@ -16,9 +13,9 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
 
     private JFrame backFrame;
     private JLabel titleLabel, welcomeLabel, cedulaLabel, passLabel,
-            phoneLabel, orLoginLabel, nameLabel, userTypeLabel;
+            phoneLabel, orLoginLabel, nameLabel, userTypeLabel, placaLabel;
     private JButton goToLoginButton, registerButton, backButton, closeButton, showPassButton;
-    private JTextField cedulaField, phoneField, nameField;
+    private JTextField cedulaField, phoneField, nameField, placaField;
     private JPasswordField passField;
     private String[] user_types = {"Selecciona una opción","Cliente", "Conductor"};
     private JComboBox<String> userTypeBox;
@@ -70,6 +67,8 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
         userTypeBox.setBorder(
                 BorderFactory.createCompoundBorder(new LineBorder(Styles.defaultBoder),
                         BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+
+        userTypeBox.addItemListener(e -> placaField.setEnabled(e.getItem() == user_types[2]));
         userTypeBox.setBackground(Styles.boneWhite);
 
 
@@ -100,49 +99,59 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
         add(phoneField);
 
 
+        placaLabel = new JLabel("Placa");
+        placaLabel.setBounds(10, 390, 400, 30);
+        add(placaLabel);
+
+        placaField = new JTextField();
+        placaField.setBounds(10, 420, 400, 30);
+        placaField.setEnabled(false);
+        add(placaField);
+
+
         passLabel = new JLabel("Contraseña");
-        passLabel.setBounds(10, 390, 400, 30);
+        passLabel.setBounds(10, 460, 400, 30);
         add(passLabel);
 
         passField = new JPasswordField();
-        passField.setBounds(10, 420, 310, 30);
+        passField.setBounds(10, 490, 310, 30);
         passField.addActionListener(this);
         add(passField);
 
         showPassButton = new JButton("Mostrar");
-        showPassButton.setBounds(320, 420, 90, 28);
+        showPassButton.setBounds(320, 490, 90, 28);
         showPassButton.addActionListener(this);
         add(showPassButton);
 
         registerButton = new JButton("Registrarse");
-        registerButton.setBounds(10, 460, 400, 45);
+        registerButton.setBounds(10, 530, 400, 45);
         registerButton.addActionListener(this);
         add(registerButton);
 
 
         orLoginLabel = new JLabel("¿Ya tienes cuenta?");
-        orLoginLabel.setBounds(10, 515, 400, 30);
+        orLoginLabel.setBounds(10, 585, 400, 30);
         add(orLoginLabel);
 
         goToLoginButton = new JButton("Inicia Sesión");
-        goToLoginButton.setBounds(10, 545, 400, 45);
+        goToLoginButton.setBounds(10, 615, 400, 45);
         goToLoginButton.addActionListener(this);
         add(goToLoginButton);
 
 
         backButton = new JButton("Volver");
-        backButton.setBounds(10, 615, 195, 45);
+        backButton.setBounds(10, 675, 195, 45);
         add(backButton);
 
         closeButton = new JButton("Cerrar");
-        closeButton.setBounds(215, 615, 195, 45);
+        closeButton.setBounds(215, 675, 195, 45);
         add(closeButton);
 
 
         new BackAndCloseB(this, this.backFrame, backButton, closeButton, () -> MainWindow.main(null));
 
         new Styles(this, titleLabel,
-                new JTextField[]{nameField, cedulaField, passField, phoneField}, separatorTitle);
+                new JTextField[]{nameField, cedulaField, passField, phoneField, placaField}, separatorTitle);
 
         // Estilos para el botón de mostrar contraseña
         showPassButton.setFont(Styles.smallerMainFont);
@@ -175,11 +184,17 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
 
     // Revisa los entrys
     private boolean checkEntrys(){
+        placaField.setText(placaField.getText().toUpperCase());
         String name = nameField.getText(), cedula = cedulaField.getText(),
-                phone = phoneField.getText(), pass = new String(passField.getPassword());
+                phone = phoneField.getText(), placa = placaField.getText(),
+                pass = new String(passField.getPassword());
 
         if (userTypeBox.getSelectedItem() == user_types[0]){
             showError("No has seleccionado ninguna opción");
+            return false;
+        } else if (userTypeBox.getSelectedItem() == user_types[2] && !placa.matches("^[A-Z]{3}[0-9]{3}$")){
+            showError("Está mal la placa");
+            placaField.setText("");
             return false;
         }
 
@@ -193,6 +208,7 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
         if (name.length() > 50 || name.length() < 5){
             showError("Que nombre tan raro");
             nameField.setText("");
+            return false;
         }
 
 
@@ -248,7 +264,7 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             uberRegisterGUI uberRGUI = new uberRegisterGUI(null);
-            uberRGUI.setBounds(0, 0, 430, 700);
+            uberRGUI.setBounds(0, 0, 430, 760);
             uberRGUI.setLocationRelativeTo(null);
             uberRGUI.setVisible(true);
         });
