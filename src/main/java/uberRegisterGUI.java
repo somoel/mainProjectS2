@@ -13,12 +13,13 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
 
     private JFrame backFrame;
     private JLabel titleLabel, welcomeLabel, cedulaLabel, passLabel,
-            phoneLabel, orLoginLabel, nameLabel, userTypeLabel, placaLabel;
+            phoneLabel, orLoginLabel, nameLabel, userTypeLabel, placaAndColorLabel;
     private JButton goToLoginButton, registerButton, backButton, closeButton, showPassButton;
     private JTextField cedulaField, phoneField, nameField, placaField;
     private JPasswordField passField;
-    private String[] user_types = {"Selecciona una opción","Cliente", "Conductor"};
-    private JComboBox<String> userTypeBox;
+    private String[] user_types = {"Selecciona una opción","Cliente", "Conductor"},
+            colors_car = {"Elige un color", "Negro", "Gris", "Blanco", "Rojo", "Azul", "Verde", "Naranja", "Otro"};
+    private JComboBox<String> userTypeBox, colorBox;
     private JSeparator separatorTitle;
 
     public uberRegisterGUI(JFrame backFrame){
@@ -40,7 +41,7 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
         add(welcomeLabel);
 
 
-        userTypeLabel = new JLabel("Qué tipo de usuario serás?");
+        userTypeLabel = new JLabel("¿Qué tipo de usuario serás?");
         userTypeLabel.setBounds(10, 110, 400, 30);
         add(userTypeLabel);
 
@@ -50,25 +51,14 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
         add(userTypeBox);
 
         // Personalización del Combobox
-        userTypeBox.setUI(new BasicComboBoxUI() {
-            @Override
-            protected ComboPopup createPopup() {
-                return new BasicComboPopup(comboBox) {
-                    @Override
-                    protected JScrollPane createScroller() {
-                        JScrollPane scroller = new JScrollPane(list,
-                                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-                        scroller.getViewport().setBackground(Color.RED);
-                        return scroller;
-                    }
-                };
+        setupComboBox(userTypeBox);
+
+        userTypeBox.addItemListener(e -> {
+            if (e.getItem() == user_types[2]) {
+                placaField.setEnabled(true);
+                colorBox.setEnabled(true);
             }
         });
-        userTypeBox.setBorder(
-                BorderFactory.createCompoundBorder(new LineBorder(Styles.defaultBoder),
-                        BorderFactory.createEmptyBorder(5, 5, 5, 5)));
-
-        userTypeBox.addItemListener(e -> placaField.setEnabled(e.getItem() == user_types[2]));
         userTypeBox.setBackground(Styles.boneWhite);
 
 
@@ -99,15 +89,22 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
         add(phoneField);
 
 
-        placaLabel = new JLabel("Placa");
-        placaLabel.setBounds(10, 390, 400, 30);
-        add(placaLabel);
+        placaAndColorLabel = new JLabel("Placa y color de tu carro");
+        placaAndColorLabel.setBounds(10, 390, 400, 30);
+        add(placaAndColorLabel);
 
         placaField = new JTextField();
-        placaField.setBounds(10, 420, 400, 30);
+        placaField.setBounds(10, 420, 195, 30);
         placaField.setEnabled(false);
         add(placaField);
 
+        colorBox = new JComboBox<>(colors_car);
+        colorBox.setBounds(215, 420, 195, 30);
+        colorBox.setEnabled(false);
+        add(colorBox);
+
+        setupComboBox(colorBox);
+        colorBox.addItemListener(e -> colorBox.setEditable(e.getItem() == colors_car[8]));
 
         passLabel = new JLabel("Contraseña");
         passLabel.setBounds(10, 460, 400, 30);
@@ -176,6 +173,30 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
 
     }
 
+    /*
+    Configuración de color para un combobox
+     */
+    private void setupComboBox(JComboBox<String> eComboBox){
+
+        eComboBox.setUI(new BasicComboBoxUI() {
+            @Override
+            protected ComboPopup createPopup() {
+                return new BasicComboPopup(comboBox) {
+                    @Override
+                    protected JScrollPane createScroller() {
+                        JScrollPane scroller = new JScrollPane(list,
+                                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                        scroller.getViewport().setBackground(Color.RED);
+                        return scroller;
+                    }
+                };
+            }
+        });
+        eComboBox.setBorder(
+                BorderFactory.createCompoundBorder(new LineBorder(Styles.defaultBoder),
+                        BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+    }
+
     // Mostrar error en JOptionPane y reiniciar entry de password
     private void showError(String message){
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
@@ -190,13 +211,17 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
                 pass = new String(passField.getPassword());
 
         if (userTypeBox.getSelectedItem() == user_types[0]){
-            showError("No has seleccionado ninguna opción");
+            showError("No has seleccionado ningún tipo de usuario");
             return false;
-        } else if (userTypeBox.getSelectedItem() == user_types[2] && !placa.matches("^[A-Z]{3}[0-9]{3}$")){
-            showError("Está mal la placa");
-            placaField.setText("");
-            return false;
-        }
+        } else if (userTypeBox.getSelectedItem() == user_types[2])
+            if (!placa.matches("^[A-Z]{3}[0-9]{3}$")) {
+                showError("Está mal la placa");
+                placaField.setText("");
+                return false;
+            } else if (colorBox.getSelectedItem() == colors_car[0]){
+                showError("No has seleccionado ningún color de carro");
+                return false;
+            }
 
         for (int i = 0; i < name.length(); i++) {
             if (!(Character.isAlphabetic(name.charAt(i)) || Character.isWhitespace(name.charAt(i)))) {
