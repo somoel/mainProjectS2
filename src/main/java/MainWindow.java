@@ -7,13 +7,13 @@ import java.awt.event.MouseEvent;
 
 /* Ventana principal que incluye
 todos los módulos adyacentes
+TODO: Crear un JOptionPane personalizado.
  */
 public class MainWindow extends JFrame implements ActionListener {
 
     // Elementos de la ventana
     private JLabel welcomeLabel, chatLabel, pongLabel, uberLabel;
     private JButton fiboButton, chatServerButton, chatClientButton, closeButton, pongButton, uberButton;
-    private JTextField tfNull;
 
 
     // Constructor de la ventana
@@ -162,7 +162,6 @@ public class MainWindow extends JFrame implements ActionListener {
         mwindow.setVisible(true);
         mwindow.setDefaultCloseOperation(EXIT_ON_CLOSE);
         mwindow.setLocationRelativeTo(null);
-
     }
 
 }

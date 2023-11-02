@@ -7,10 +7,13 @@ import java.awt.event.MouseEvent;
 siguiendo el mismo estilo de IU
  */
 
-// TODO: Organizar bien el constructor y hacer varios métodos.
+/*TODO: Organizar bien el constructor y hacer varios métodos.
+        Optimizar constructores con varios textfields.
+ */
 public class Styles {
     private JFrame frame;
     private JLabel titleLabel;
+    private JDialog dialog;
     private JTextField[] textFields;
     private JLabel icon_label;
     private JTextField textField;
@@ -34,18 +37,25 @@ public class Styles {
             titleMainFont = mainFont.deriveFont(Font.BOLD, 30),
             smallerMainFont = mainFont.deriveFont(Font.PLAIN, 15);
 
+    // Reconstructor por defecto para los frames
+    private void BasicStyles(){
+        BasicStyles(this.frame, this.frame.getContentPane());
+    }
 
     // Estilos básicos para dividir correctamente los constructores
-    private void BasicStyles(){
-        this.frame.setLayout(null);
-        this.frame.getContentPane().setBackground(boneWhite);
-        this.frame.setResizable(false);
+    private void BasicStyles(Window win, Container pane){
+        if (win instanceof JFrame){
+            this.frame.setResizable(false);
+        } else {
+            this.dialog.setResizable(false);
+        }
 
-        // Ícono de la app
-        this.frame.setIconImage(iconLogo);
+        win.setLayout(null);
+        pane.setBackground(boneWhite);
+        win.setIconImage(iconLogo);
 
         // Obtiene cada componente del frame
-        for (Component c : this.frame.getRootPane().getContentPane().getComponents()) {
+        for (Component c : pane.getComponents()) {
 
             c.setFont(mainFont); // Asigna la fuente
             c.setForeground(darkBlack); // Y el color de la fuente
@@ -87,7 +97,7 @@ public class Styles {
 
         // Agrega el ícono al JLabel
         icon_label.setIcon(iconImage);
-        this.frame.add(icon_label);
+        win.add(icon_label);
 
         this.titleLabel.setFont(titleMainFont); // Fuente para el título
 
@@ -141,4 +151,15 @@ public class Styles {
 
         BasicStyles();
     }
+
+    // Constructor para JDialogs con múltiples textfields
+    public Styles(JDialog dialog, JLabel titleLabel, JTextField[] textFields, JSeparator underlineTitle) {
+        this.titleLabel = titleLabel;
+        this.dialog = dialog;
+        this.underlineTitle = underlineTitle;
+        this.textFields = textFields;
+        BasicStyles(this.dialog, this.dialog.getContentPane());
+    }
+
+
 }

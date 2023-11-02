@@ -6,6 +6,9 @@ import java.awt.event.MouseEvent;
 
 /* Inicio de Sesión de Ubernardo
  */
+/*
+TODO: Cambiar el logo de Ubernardo
+ */
 public class uberLoginGUI extends JFrame implements ActionListener{
 
     private JFrame backFrame;
