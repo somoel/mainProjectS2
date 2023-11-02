@@ -74,7 +74,7 @@ public class MainWindow extends JFrame implements ActionListener {
         closeButton.addActionListener(this);
         add(closeButton);
 
-        new Styles(this, welcomeLabel, tfNull, null); // Agrega colores
+        new Styles(this, welcomeLabel, null); // Agrega colores
 
         for (Component c : getRootPane().getContentPane().getComponents()) {
             if (c instanceof JButton) {

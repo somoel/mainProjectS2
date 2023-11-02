@@ -133,4 +133,12 @@ public class Styles {
             }
         }
     }
+
+    public Styles(JFrame frame, JLabel titleLabel, JSeparator underlineTitle){
+        this.frame = frame;
+        this.titleLabel = titleLabel;
+        this.underlineTitle = underlineTitle;
+
+        BasicStyles();
+    }
 }
