@@ -9,6 +9,7 @@ import java.util.Objects;
  */
 /*
 TODO: Cambiar el logo de Ubernardo
+      Agregar el "olvidaste tu contraseña"
  */
 
 public class uberLoginGUI extends JFrame implements ActionListener{

@@ -23,10 +23,10 @@ public class operationsCRUD {
     }
 
     public static int validateLogin(String userType, String cedula, String password) {
-        String shortType = userType.substring(0, 3);
-        String id = shortType + "_Id";
-        String cedCol = shortType + "_Cedula";
-        String passCol = shortType + "_Pass";
+        String shortType = userType.substring(0, 3) + "_";
+        String id = shortType + "Id";
+        String cedCol = shortType + "Cedula";
+        String passCol = shortType + "Pass";
 
         String query = "SELECT " + id + " FROM " + userType + " WHERE " + cedCol + " = ? AND " + passCol + " = ?";
 
@@ -48,6 +48,50 @@ public class operationsCRUD {
         } catch (SQLException e) {
             e.printStackTrace();
             return -1; // En caso de error, retorna -1
+        }
+    }
+
+    public static boolean registerUser(String userType, String name, String cedula,
+                                       String email, String phone, String placa,
+                                       String color, String pass){
+        String shortType = userType.substring(0, 3);
+
+        String query;
+
+        if (userType.equals("Cliente")){
+            query = "INSERT INTO Cliente (Cli_Cedula, Cli_Nombre, Cli_Pass, Cli_Numero, Cli_Pedido, Cli_Email)" +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
+
+
+        } else {
+            query = "INSERT INTO Conductor (Con_Cedula, Con_Nombre, Con_Pass, Con_Numero, Con_Pedido, Con_Email," +
+                    " Con_Placa, Con_Color) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        }
+
+        try{
+            PreparedStatement statement = con.prepareStatement(query);
+            statement.setString(1, cedula);
+            statement.setString(2, name);
+            statement.setString(3, pass);
+            statement.setString(4, phone);
+            statement.setString(5, "0");
+            statement.setString(6, email);
+            if (userType.equals("Conductor")){
+                statement.setString(7, placa);
+                statement.setString(8, color);
+            }
+
+            if (statement.executeUpdate() > 0){
+                System.out.println("registradiño");
+                return true;
+            } else {
+                System.out.println("no se registró jaj");
+                return false;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
