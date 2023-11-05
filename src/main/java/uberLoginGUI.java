@@ -3,20 +3,25 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Objects;
 
 /* Inicio de Sesión de Ubernardo
  */
 /*
 TODO: Cambiar el logo de Ubernardo
  */
+
 public class uberLoginGUI extends JFrame implements ActionListener{
 
     private JFrame backFrame;
-    private JLabel titleLabel, welcomeLabel, cedulaLabel, passLabel, orRegisterLabel;
+    private JLabel titleLabel, welcomeLabel, cedulaLabel, passLabel, orRegisterLabel, userTypeLabel;
     private JButton loginButton, registerButton, backButton, closeButton, showPassButton;
     private JTextField cedulaField;
     private JPasswordField passField;
     private JSeparator separatorTitle;
+    private String[]  user_types = {"Selecciona una opción","Cliente", "Conductor"};
+    private JComboBox<String> userTypeBox;
+
 
     // Constructor de la ventana
     public uberLoginGUI(JFrame backFrame){
@@ -37,54 +42,69 @@ public class uberLoginGUI extends JFrame implements ActionListener{
         welcomeLabel.setBounds(10, 60, 400, 30);
         add(welcomeLabel);
 
+        userTypeLabel = new JLabel("¿Qué tipo de usuario serás?");
+        userTypeLabel.setBounds(10, 110, 400, 30);
+        add(userTypeLabel);
+
+
+        userTypeBox = new JComboBox<>(user_types);
+        userTypeBox.setBounds(10, 140, 400, 30);
+        add(userTypeBox);
+
+        // Personalización del Combobox
+        uberRegisterGUI.setupComboBox(userTypeBox);
+        userTypeBox.addItemListener(e -> loginButton.setEnabled(e.getItem() != user_types[0]));
+        userTypeBox.setBackground(Styles.boneWhite);
+
 
         cedulaLabel = new JLabel("Cédula");
-        cedulaLabel.setBounds(10, 110, 400, 30);
+        cedulaLabel.setBounds(10, 190, 400, 30);
         add(cedulaLabel);
 
         cedulaField = new JTextField();
-        cedulaField.setBounds(10, 140, 400, 30);
+        cedulaField.setBounds(10, 220, 400, 30);
         add(cedulaField);
 
 
         passLabel = new JLabel("Contraseña");
-        passLabel.setBounds(10, 190, 400, 30);
+        passLabel.setBounds(10, 270, 400, 30);
         add(passLabel);
 
         passField = new JPasswordField();
-        passField.setBounds(10, 220, 310, 30);
+        passField.setBounds(10, 300, 310, 30);
         passField.addActionListener(this);
         add(passField);
 
         showPassButton = new JButton("Mostrar");
-        showPassButton.setBounds(320, 220, 90, 28);
+        showPassButton.setBounds(320, 300, 90, 28);
         showPassButton.addActionListener(this);
         add(showPassButton);
 
 
 
         loginButton = new JButton("Iniciar Sesión");
-        loginButton.setBounds(10, 260, 400, 45);
+        loginButton.setBounds(10, 340, 400, 45);
         loginButton.addActionListener(this);
+        loginButton.setEnabled(false);
         add(loginButton);
 
 
         orRegisterLabel = new JLabel("¿Aún no tienes cuenta?");
-        orRegisterLabel.setBounds(10, 315, 400, 40);
+        orRegisterLabel.setBounds(10, 395, 400, 40);
         add(orRegisterLabel);
 
         registerButton = new JButton("Registrarse");
-        registerButton.setBounds(10, 355, 400, 45);
+        registerButton.setBounds(10, 435, 400, 45);
         registerButton.addActionListener(this);
         add(registerButton);
 
 
         backButton = new JButton("Volver");
-        backButton.setBounds(10, 415, 195, 45);
+        backButton.setBounds(10, 485, 195, 45);
         add(backButton);
 
         closeButton = new JButton("Cerrar");
-        closeButton.setBounds(215, 415, 195, 45);
+        closeButton.setBounds(215, 485, 195, 45);
         add(closeButton);
 
 
@@ -141,13 +161,32 @@ public class uberLoginGUI extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         // Iniciar sesión
         if ((e.getSource() == loginButton || e.getSource() == passField) && checkEntrys()){
-            System.out.println("logueadito");
-            SwingUtilities.invokeLater(() -> {
-                uberClientGUI uberCCGUI = new uberClientGUI("0");
-                uberCCGUI.setBounds(0, 0, 430, 700);
-                uberCCGUI.setLocationRelativeTo(null);
-                uberCCGUI.setVisible(true);
-            });
+
+            String user_id = String.valueOf(operationsCRUD.validateLogin(
+                    (String) Objects.requireNonNull(userTypeBox.getSelectedItem()),
+                    cedulaField.getText(),
+                    new String(passField.getPassword())));
+
+            if (!user_id.equals("-1")){
+                dispose();
+                switch ((String) userTypeBox.getSelectedItem()){
+                    case "Cliente":
+                        SwingUtilities.invokeLater(() -> {
+                            uberClientGUI uberCCGUI = new uberClientGUI(user_id);
+                            uberCCGUI.setBounds(0, 0, 430, 700);
+                            uberCCGUI.setLocationRelativeTo(null);
+                            uberCCGUI.setVisible(true);
+                        });
+                        break;
+                    case "Conductor":
+                        SwingUtilities.invokeLater(() -> {
+                            uberDriverGUI uberDGUI = new uberDriverGUI(user_id);
+                            uberDGUI.setBounds(0, 0, 430, 700);
+                            uberDGUI.setLocationRelativeTo(null);
+                            uberDGUI.setVisible(true);
+                        });
+                }
+            }
         }
 
         // Mostrar contraseña
@@ -175,10 +214,12 @@ public class uberLoginGUI extends JFrame implements ActionListener{
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             uberLoginGUI uberLGUI = new uberLoginGUI(null);
-            uberLGUI.setBounds(0, 0, 430, 500);
+            uberLGUI.setBounds(0, 0, 430, 570);
             uberLGUI.setLocationRelativeTo(null);
             uberLGUI.setVisible(true);
         });
     }
+
+
 
 }

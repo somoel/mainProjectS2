@@ -14,7 +14,7 @@ estado del pedido y poder realizar un pedido.
         Rehacer el tamaño en base al contenido
  */
 public class uberClientGUI extends JFrame implements ActionListener {
-    private String cedulaLoged, nameClient = "(nombre)", placaUber, colorUber, nameUber, phoneUber,
+    private String id_client, nameClient = "(nombre)", placaUber, colorUber, nameUber, phoneUber,
             inicioViaje, finViaje, kmViaje, costoViaje, horaViaje, fechaViaje;
     private boolean actual_status;
     private JLabel titleLabel, statusLabel, infoLabel;
@@ -22,8 +22,8 @@ public class uberClientGUI extends JFrame implements ActionListener {
     private JButton actionButton, logoutButton, closeButton;
 
     // Constructor
-    public uberClientGUI(String cedulaLoged){
-        this.cedulaLoged = cedulaLoged;
+    public uberClientGUI(String id_client){
+        this.id_client = id_client;
 
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);

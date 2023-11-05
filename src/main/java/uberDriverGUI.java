@@ -7,7 +7,7 @@ import javax.swing.*;
     TODO: Falta el cancelar el pedido actual
  */
 public class uberDriverGUI extends JFrame{
-    private String cedulaLoged, nameDriver = "(nombre)", placaUber, colorUber, nameUber, phoneUber,
+    private String id_driver, nameDriver = "(nombre)", placaUber, colorUber, nameUber, phoneUber,
             inicioViaje, finViaje, kmViaje, costoViaje, horaViaje, fechaViaje;
     private boolean actual_status;
     private JLabel titleLabel, statusLabel, infoLabel;
@@ -15,8 +15,8 @@ public class uberDriverGUI extends JFrame{
     private JButton actionButton, logoutButton, closeButton;
 
     // Constructor
-    public uberDriverGUI(String cedulaLoged){
-        this.cedulaLoged = cedulaLoged;
+    public uberDriverGUI(String id_driver){
+        this.id_driver = id_driver;
 
         setLayout(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);

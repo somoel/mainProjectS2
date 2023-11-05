@@ -176,7 +176,7 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
     /*
     Configuración de color para un combobox
      */
-    private void setupComboBox(JComboBox<String> eComboBox){
+    public static void setupComboBox(JComboBox<String> eComboBox){
 
         eComboBox.setUI(new BasicComboBoxUI() {
             @Override
