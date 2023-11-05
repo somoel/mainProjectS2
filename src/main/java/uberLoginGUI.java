@@ -172,19 +172,31 @@ public class uberLoginGUI extends JFrame implements ActionListener{
                     cedulaField.getText(),
                     new String(passField.getPassword())));
 
-            if (!user_id.equals("-1")){
-                dispose();
-                switch ((String) userTypeBox.getSelectedItem()){
-                    case "Cliente":
-                        SwingUtilities.invokeLater(() -> {
-                            uberClientGUI uberCCGUI = new uberClientGUI(user_id);
-                        });
-                        break;
-                    case "Conductor":
-                        SwingUtilities.invokeLater(() -> {
-                            uberDriverGUI uberDGUI = new uberDriverGUI(user_id);
-                        });
-                }
+            switch (Integer.parseInt(user_id)){
+                case -1:
+                    showError("Datos de inicio de sesión incorrectos.");
+                    cedulaField.setText("");
+                    break;
+                case -2:
+                    showError("Error de la base de datos.");
+                    break;
+                case -3:
+                    showError("Error de conexión con base de datos. Verifica tu conexión a internet y vuelve a intentarlo.");
+                    break;
+                default:
+                    dispose();
+                    switch ((String) userTypeBox.getSelectedItem()){
+                        case "Cliente":
+                            SwingUtilities.invokeLater(() -> {
+                                uberClientGUI uberCCGUI = new uberClientGUI(user_id);
+                            });
+                            break;
+                        case "Conductor":
+                            SwingUtilities.invokeLater(() -> {
+                                uberDriverGUI uberDGUI = new uberDriverGUI(user_id);
+                            });
+                            break;
+                    }
             }
         }
 

@@ -7,7 +7,7 @@ public class operationsCRUD {
     private static final String USUARIO = "sql10659471";
     private static final String CONTRASENA = "8sX7wd4iRk";
 
-    private static Connection con = obtenerConexion();
+    private static Connection con;
 
     public static Connection obtenerConexion() {
         Connection conexion = null;
@@ -23,6 +23,7 @@ public class operationsCRUD {
     }
 
     public static int validateLogin(String userType, String cedula, String password) {
+        con = obtenerConexion();
         String shortType = userType.substring(0, 3) + "_";
         String id = shortType + "Id";
         String cedCol = shortType + "Cedula";
@@ -47,13 +48,17 @@ public class operationsCRUD {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return -1; // En caso de error, retorna -1
+            return -2; // En caso de error, retorna -2
+        } catch (NullPointerException e){
+            e.printStackTrace();
+            return -3;
         }
     }
 
     public static boolean registerUser(String userType, String name, String cedula,
                                        String email, String phone, String placa,
                                        String color, String pass){
+        con = obtenerConexion();
         String shortType = userType.substring(0, 3);
 
         String query;

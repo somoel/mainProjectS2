@@ -290,7 +290,7 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(this,
                         "Listo, se registró rey.", "Hecho", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                System.out.println("troste");
+                showError("Paila. Pasó algo con la base de datos. Asegúrese de que sí tiene internet.");
             }
         }
 
