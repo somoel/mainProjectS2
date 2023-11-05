@@ -46,14 +46,40 @@ public class Styles {
     private void BasicStyles(Window win, Container pane){
         if (win instanceof JFrame){
             this.frame.setResizable(false);
-        } else {
-            this.dialog.setResizable(false);
-        }
+        } else if (win instanceof Dialog){
+            this.dialog.setResizable(false);}
+
 
         win.setLayout(null);
-        pane.setBackground(boneWhite);
         win.setIconImage(iconLogo);
 
+        panelStyle(pane); // Optimizar panel por panel
+
+        // Label del Ícono
+        icon_label = new JLabel();
+        icon_label.setBounds(titleLabel.getWidth() - 40, 10, 40, 40);
+
+        // Redimensión del Ícono para que quede al tamaño del Label
+        Icon iconImage = new ImageIcon(
+                iconLogo.getScaledInstance(icon_label.getWidth()
+                        , icon_label.getHeight(), Image.SCALE_SMOOTH));
+
+        // Agrega el ícono al JLabel
+        icon_label.setIcon(iconImage);
+        win.add(icon_label);
+
+        this.titleLabel.setFont(titleMainFont); // Fuente para el título
+
+        // Creador del Underline de los títulos.
+        if (this.underlineTitle != null) {
+            this.underlineTitle.setBounds(0, this.titleLabel.getY() + this.titleLabel.getHeight(),
+                    430, 5);
+            underlineTitle.setBorder(BorderFactory.createLineBorder(offOrange, 3));
+        }
+    }
+
+    public static void panelStyle(Container pane) {
+        pane.setBackground(boneWhite);
         // Obtiene cada componente del frame
         for (Component c : pane.getComponents()) {
 
@@ -85,29 +111,7 @@ public class Styles {
                 c.setForeground(boneWhite);
             }
         }
-
-        // Label del Ícono
-        icon_label = new JLabel();
-        icon_label.setBounds(titleLabel.getWidth() - 40, 10, 40, 40);
-
-        // Redimensión del Ícono para que quede al tamaño del Label
-        Icon iconImage = new ImageIcon(
-                iconLogo.getScaledInstance(icon_label.getWidth()
-                        , icon_label.getHeight(), Image.SCALE_SMOOTH));
-
-        // Agrega el ícono al JLabel
-        icon_label.setIcon(iconImage);
-        win.add(icon_label);
-
-        this.titleLabel.setFont(titleMainFont); // Fuente para el título
-
-        // Creador del Underline de los títulos.
-        if (this.underlineTitle != null) {
-            this.underlineTitle.setBounds(0, this.titleLabel.getY() + this.titleLabel.getHeight(), 430, 5);
-            underlineTitle.setBorder(BorderFactory.createLineBorder(offOrange, 3));
-        }
     }
-
 
 
     // Constructor y unica función
@@ -158,6 +162,13 @@ public class Styles {
         this.dialog = dialog;
         this.underlineTitle = underlineTitle;
         this.textFields = textFields;
+        BasicStyles(this.dialog, this.dialog.getContentPane());
+    }
+
+    public Styles(JDialog dialog, JLabel titleLabel, JSeparator underlineTitle) {
+        this.titleLabel = titleLabel;
+        this.dialog = dialog;
+        this.underlineTitle = underlineTitle;
         BasicStyles(this.dialog, this.dialog.getContentPane());
     }
 

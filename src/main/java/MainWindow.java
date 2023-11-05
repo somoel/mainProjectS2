@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 /* Ventana principal que incluye
 todos los módulos adyacentes
 TODO: Crear un JOptionPane personalizado.
+    Organizar arbol de archivos
+     Organizar constructores de cada ventana
  */
 public class MainWindow extends JFrame implements ActionListener {
 

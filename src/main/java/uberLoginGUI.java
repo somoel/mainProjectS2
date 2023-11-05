@@ -142,6 +142,12 @@ public class uberLoginGUI extends JFrame implements ActionListener{
         // Iniciar sesión
         if ((e.getSource() == loginButton || e.getSource() == passField) && checkEntrys()){
             System.out.println("logueadito");
+            SwingUtilities.invokeLater(() -> {
+                uberClientGUI uberCCGUI = new uberClientGUI("0");
+                uberCCGUI.setBounds(0, 0, 430, 700);
+                uberCCGUI.setLocationRelativeTo(null);
+                uberCCGUI.setVisible(true);
+            });
         }
 
         // Mostrar contraseña
