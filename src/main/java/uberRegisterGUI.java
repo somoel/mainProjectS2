@@ -26,10 +26,6 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
     public uberRegisterGUI(JFrame backFrame){
         this.backFrame = backFrame;
 
-        setLayout(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Ubernardo");
-
         titleLabel = new JLabel("Ubernardo");
         titleLabel.setBounds(10, 10, 400, 40);
         add(titleLabel);
@@ -181,6 +177,13 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
         });
 
 
+        // Propios de la ventana
+        setLayout(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Uber: Registrarse");
+        setSize(430,820);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     /*
@@ -306,18 +309,12 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
         if (e.getSource() == goToLoginButton){
             dispose();
             uberLoginGUI uberLGUI = new uberLoginGUI(null);
-            uberLGUI.setBounds(0, 0, 430, 500);
-            uberLGUI.setLocationRelativeTo(null);
-            uberLGUI.setVisible(true);
         }
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             uberRegisterGUI uberRGUI = new uberRegisterGUI(null);
-            uberRGUI.setBounds(0, 0, 430, 820);
-            uberRGUI.setLocationRelativeTo(null);
-            uberRGUI.setVisible(true);
         });
     }
 

@@ -25,10 +25,6 @@ public class uberClientGUI extends JFrame implements ActionListener {
     public uberClientGUI(String id_client){
         this.id_client = id_client;
 
-        setLayout(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Cliente");
-
         titleLabel = new JLabel("¿Qué tal, " + nameClient + "?");
         titleLabel.setBounds(10, 10, 400, 40);
         add(titleLabel);
@@ -64,6 +60,14 @@ public class uberClientGUI extends JFrame implements ActionListener {
         add(closeButton);
 
         new Styles(this, titleLabel, separatorTitle);
+
+        // Propios de la ventana
+        setLayout(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Ubernardo: Cliente");
+        setSize(430,700);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     // Diseña el string en HTML para mostrar el estado de la orden
@@ -94,9 +98,6 @@ public class uberClientGUI extends JFrame implements ActionListener {
         if (e.getSource() == actionButton && Objects.equals(actionButton.getText(), "Cancelar")){
             SwingUtilities.invokeLater(() -> {
                 uberOrderGUI uberOGUI = new uberOrderGUI(this);
-                uberOGUI.setBounds(0, 0, 430, 420);
-                uberOGUI.setLocationRelativeTo(null);
-                uberOGUI.setVisible(true);
             });
         }
     }
@@ -104,9 +105,6 @@ public class uberClientGUI extends JFrame implements ActionListener {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             uberClientGUI uberCCGUI = new uberClientGUI("0");
-            uberCCGUI.setBounds(0, 0, 430, 700);
-            uberCCGUI.setLocationRelativeTo(null);
-            uberCCGUI.setVisible(true);
         });
     }
 }

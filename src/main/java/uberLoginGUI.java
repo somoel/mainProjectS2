@@ -28,10 +28,6 @@ public class uberLoginGUI extends JFrame implements ActionListener{
     public uberLoginGUI(JFrame backFrame){
         this.backFrame = backFrame;
 
-        setLayout(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Ubernardo");
-
         titleLabel = new JLabel("Ubernardo");
         titleLabel.setBounds(10, 10, 400, 40);
         add(titleLabel);
@@ -132,6 +128,14 @@ public class uberLoginGUI extends JFrame implements ActionListener{
                 showPassButton.setFont(Styles.smallerMainFont);
             }
         });
+
+        // Propios de la ventana
+        setLayout(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Ubernardo: Iniciar Sesión");
+        setSize(430,570);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     // Muestra error con un mensaje de diálogo adicionado de siempre reiniciar el campo de la contraseña
@@ -174,17 +178,11 @@ public class uberLoginGUI extends JFrame implements ActionListener{
                     case "Cliente":
                         SwingUtilities.invokeLater(() -> {
                             uberClientGUI uberCCGUI = new uberClientGUI(user_id);
-                            uberCCGUI.setBounds(0, 0, 430, 700);
-                            uberCCGUI.setLocationRelativeTo(null);
-                            uberCCGUI.setVisible(true);
                         });
                         break;
                     case "Conductor":
                         SwingUtilities.invokeLater(() -> {
                             uberDriverGUI uberDGUI = new uberDriverGUI(user_id);
-                            uberDGUI.setBounds(0, 0, 430, 700);
-                            uberDGUI.setLocationRelativeTo(null);
-                            uberDGUI.setVisible(true);
                         });
                 }
             }
@@ -205,9 +203,6 @@ public class uberLoginGUI extends JFrame implements ActionListener{
         if (e.getSource() == registerButton){
             dispose();
             uberRegisterGUI uberRGUI = new uberRegisterGUI(null);
-            uberRGUI.setBounds(0, 0, 430, 700);
-            uberRGUI.setLocationRelativeTo(null);
-            uberRGUI.setVisible(true);
         }
     }
 
@@ -215,9 +210,6 @@ public class uberLoginGUI extends JFrame implements ActionListener{
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             uberLoginGUI uberLGUI = new uberLoginGUI(null);
-            uberLGUI.setBounds(0, 0, 430, 570);
-            uberLGUI.setLocationRelativeTo(null);
-            uberLGUI.setVisible(true);
         });
     }
 

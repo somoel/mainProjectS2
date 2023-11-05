@@ -25,10 +25,6 @@ public class FiboGUI extends JFrame implements ActionListener {
     public FiboGUI(JFrame backFrame) {
         this.backFrame = backFrame;
 
-        // Propios de la ventana
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Programa Fibonacci");
-
         titleLabel = new JLabel("Fibonacci");
         titleLabel.setVerticalAlignment(titleLabel.BOTTOM);
         titleLabel.setBounds(10, 10, 400, 40);
@@ -88,6 +84,13 @@ public class FiboGUI extends JFrame implements ActionListener {
 
         new BackAndCloseB(this, this.backFrame, backButton, closeButton, null); // Funciones de volver y cerrar
 
+        // Propios de la ventana
+        setLayout(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Serie de fibonacci");
+        setSize(430,500);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     public void actionPerformed(ActionEvent event) {
@@ -147,10 +150,6 @@ public class FiboGUI extends JFrame implements ActionListener {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             FiboGUI fibo = new FiboGUI(null);
-
-            fibo.setBounds(0, 0, 430, 500);
-            fibo.setLocationRelativeTo(null);
-            fibo.setVisible(true);
         });
     }
 

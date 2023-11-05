@@ -65,11 +65,6 @@ public class ChatClientGUI extends JFrame implements ActionListener {
             server_IP = "null";
         }
 
-        // Propios de la ventana
-        setLayout(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Chat: Cliente");
-
         titleLabel = new JLabel("Chat: Cliente");
         titleLabel.setBounds(10, 10, 400, 40);
         add(titleLabel);
@@ -167,6 +162,14 @@ public class ChatClientGUI extends JFrame implements ActionListener {
             }
         });
         receiveMessages.start(); // Iniciar el hilo
+
+        // Propios de la ventana
+        setLayout(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Chat: Cliente");
+        setSize(430,800);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     // Método del botón
@@ -200,9 +203,6 @@ public class ChatClientGUI extends JFrame implements ActionListener {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             ChatClientGUI clientGUI = new ChatClientGUI(null);
-            clientGUI.setBounds(0, 0, 430, 800);
-            clientGUI.setLocationRelativeTo(null);
-            clientGUI.setVisible(true);
         });
     }
 }

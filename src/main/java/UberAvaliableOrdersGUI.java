@@ -22,8 +22,6 @@ public class UberAvaliableOrdersGUI extends JDialog{
     // Constructor
     public UberAvaliableOrdersGUI(JFrame backFrame) {
         super(backFrame, "Pedidos Disponibles", true);
-        setLayout(null);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         titleLabel = new JLabel("A chambear");
         titleLabel.setBounds(10, 10, 400, 40);
@@ -126,9 +124,12 @@ public class UberAvaliableOrdersGUI extends JDialog{
 
         Styles styles = new Styles(this, titleLabel, separatorTitle);
 
-        Styles.panelStyle(availableOptionsPanel);
-        setSize(430, 500);
+        // Propios de la ventana
+        setLayout(null);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setSize(430,500);
         setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     // Aplica código HTML y formato establecido al pedido
@@ -146,7 +147,6 @@ public class UberAvaliableOrdersGUI extends JDialog{
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             UberAvaliableOrdersGUI uberAOGUI = new UberAvaliableOrdersGUI(null);
-            uberAOGUI.setVisible(true);
         });
     }
 

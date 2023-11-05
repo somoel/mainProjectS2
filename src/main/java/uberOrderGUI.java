@@ -19,10 +19,6 @@ public class uberOrderGUI extends JDialog implements ActionListener {
     public uberOrderGUI(JFrame backFrame){
         super(backFrame, "Pedido", true);
 
-        setLayout(null);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-
-
         titleLabel = new JLabel("Pidamos eso rápido");
         titleLabel.setBounds(10, 10, 400, 40);
         add(titleLabel);
@@ -75,7 +71,12 @@ public class uberOrderGUI extends JDialog implements ActionListener {
                 new JTextField[] {startField, endField, distanceField},
                 separatorTitle);
 
-
+        // Propios de la ventana
+        setLayout(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(430,420);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     // Muestra el error en un JOptionPane y reinicia el textfield proveniente
@@ -129,9 +130,6 @@ public class uberOrderGUI extends JDialog implements ActionListener {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             uberOrderGUI uberOGUI = new uberOrderGUI(null);
-            uberOGUI.setBounds(0, 0, 430, 420);
-            uberOGUI.setLocationRelativeTo(null);
-            uberOGUI.setVisible(true);
         });
     }
 }

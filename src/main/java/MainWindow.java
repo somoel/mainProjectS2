@@ -20,10 +20,6 @@ public class MainWindow extends JFrame implements ActionListener {
 
     // Constructor de la ventana
     public MainWindow() {
-        // Configuración de la ventana
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Programa Principal");
-
         // Elementos de la ventana
         welcomeLabel = new JLabel("Bienvenido de nuevo", SwingConstants.CENTER);
         welcomeLabel.setBounds(10, 10, 400, 110);
@@ -93,6 +89,13 @@ public class MainWindow extends JFrame implements ActionListener {
             }
         }
 
+        // Propios de la ventana
+        setLayout(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Ventana Principal");
+        setSize(430,600);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     // Acción de los botones
@@ -100,33 +103,19 @@ public class MainWindow extends JFrame implements ActionListener {
         // Botón Fibonacci y llamada de la clase
         if (event.getSource() == fiboButton) {
             setVisible(false);
-
             FiboGUI fiboWindow = new FiboGUI(this);
-            fiboWindow.setBounds(0, 0, 430, 500);
-            fiboWindow.setVisible(true);
-            fiboWindow.setLocationRelativeTo(null);
         }
 
         // Boton Chat Servidor
         if (event.getSource() == chatServerButton) {
             setVisible(false);
-
             ChatServerGUI chatServerGUI = new ChatServerGUI(this);
-            chatServerGUI.setBounds(0, 0, 430, 800);
-            chatServerGUI.setVisible(true);
-            chatServerGUI.setLocationRelativeTo(null);
-
-
         }
 
         // Botón Chat Cliente
         if (event.getSource() == chatClientButton) {
             setVisible(false);
             ChatClientGUI ChatClientGUI = new ChatClientGUI(this);
-            ChatClientGUI.setBounds(0, 0, 430, 800);
-            ChatClientGUI.setVisible(true);
-            ChatClientGUI.setLocationRelativeTo(null);
-
         }
 
         // Botón Pong
@@ -146,9 +135,6 @@ public class MainWindow extends JFrame implements ActionListener {
         if (event.getSource() == uberButton){
             setVisible(false);
             uberLoginGUI uberLGUI = new uberLoginGUI(this);
-            uberLGUI.setBounds(0, 0, 430, 500);
-            uberLGUI.setVisible(true);
-            uberLGUI.setLocationRelativeTo(null);
         }
 
         // Botón Cerrar
@@ -160,10 +146,6 @@ public class MainWindow extends JFrame implements ActionListener {
     // Creador de la Ventana
     public static void main(String[] args) {
         MainWindow mwindow = new MainWindow();
-        mwindow.setBounds(0, 0, 430, 600);
-        mwindow.setVisible(true);
-        mwindow.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        mwindow.setLocationRelativeTo(null);
     }
 
 }

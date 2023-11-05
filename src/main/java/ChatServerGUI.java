@@ -61,12 +61,6 @@ public class ChatServerGUI extends JFrame implements ActionListener {
             throw new RuntimeException(e);
         }
 
-
-        // Propios de la ventana
-        setLayout(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Chat: Servidor");
-
         titleLabel = new JLabel("Chat: Servidor");
         titleLabel.setBounds(10, 10, 400, 40);
         add(titleLabel);
@@ -179,6 +173,14 @@ public class ChatServerGUI extends JFrame implements ActionListener {
             }
         });
         receiveMessages.start(); // Iniciar el hilo
+
+        // Propios de la ventana
+        setLayout(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Chat: Servidor");
+        setSize(430,800);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
 
@@ -213,10 +215,6 @@ public class ChatServerGUI extends JFrame implements ActionListener {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             ChatServerGUI serverGUI = new ChatServerGUI(null);
-
-            serverGUI.setBounds(0, 0, 430, 800);
-            serverGUI.setLocationRelativeTo(null);
-            serverGUI.setVisible(true);
         });
     }
 }

@@ -18,10 +18,6 @@ public class uberDriverGUI extends JFrame{
     public uberDriverGUI(String id_driver){
         this.id_driver = id_driver;
 
-        setLayout(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Conductor");
-
         titleLabel = new JLabel("¿Todo bien, " + nameDriver + "?");
         titleLabel.setBounds(10, 10, 400, 40);
         add(titleLabel);
@@ -48,7 +44,6 @@ public class uberDriverGUI extends JFrame{
         actionButton = new JButton("Tomar Pedido");
         actionButton.addActionListener(e -> SwingUtilities.invokeLater(() -> {
             UberAvaliableOrdersGUI uberAOGUI = new UberAvaliableOrdersGUI(this);
-            uberAOGUI.setVisible(true);
         }));
         add(actionButton);
         actionButton.setBounds(10, 555, 400, 50);
@@ -65,6 +60,14 @@ public class uberDriverGUI extends JFrame{
         add(closeButton);
 
         new Styles(this, titleLabel, separatorTitle);
+
+        // Propios de la ventana
+        setLayout(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Ubernardo: Conductor");
+        setSize(430,700);
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     // Diseña el string en HTML para mostrar el estado de la orden
@@ -89,9 +92,6 @@ public class uberDriverGUI extends JFrame{
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             uberDriverGUI uberDGUI = new uberDriverGUI("0");
-            uberDGUI.setBounds(0, 0, 430, 700);
-            uberDGUI.setLocationRelativeTo(null);
-            uberDGUI.setVisible(true);
         });
     }
 }
