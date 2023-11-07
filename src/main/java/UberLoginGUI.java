@@ -9,10 +9,11 @@ import java.util.Objects;
  */
 /*
 TODO: Cambiar el logo de Ubernardo
-      Agregar el "olvidaste tu contraseña"
+      Agregar el "olvidaste tu contraseña":
+            Verificar correos repetidos
  */
 
-public class uberLoginGUI extends JFrame implements ActionListener{
+public class UberLoginGUI extends JFrame implements ActionListener{
 
     private JFrame backFrame;
     private JLabel titleLabel, welcomeLabel, cedulaLabel, passLabel, orRegisterLabel, userTypeLabel;
@@ -25,7 +26,7 @@ public class uberLoginGUI extends JFrame implements ActionListener{
 
 
     // Constructor de la ventana
-    public uberLoginGUI(JFrame backFrame){
+    public UberLoginGUI(JFrame backFrame){
         this.backFrame = backFrame;
 
         titleLabel = new JLabel("Ubernardo");
@@ -49,7 +50,7 @@ public class uberLoginGUI extends JFrame implements ActionListener{
         add(userTypeBox);
 
         // Personalización del Combobox
-        uberRegisterGUI.setupComboBox(userTypeBox);
+        UberRegisterGUI.setupComboBox(userTypeBox);
         userTypeBox.addItemListener(e -> loginButton.setEnabled(e.getItem() != user_types[0]));
         userTypeBox.setBackground(Styles.boneWhite);
 
@@ -167,7 +168,7 @@ public class uberLoginGUI extends JFrame implements ActionListener{
         // Iniciar sesión
         if ((e.getSource() == loginButton || e.getSource() == passField) && checkEntrys()){
 
-            String user_id = String.valueOf(operationsCRUD.validateLogin(
+            String user_id = String.valueOf(OperationsCRUD.validateLogin(
                     (String) Objects.requireNonNull(userTypeBox.getSelectedItem()),
                     cedulaField.getText(),
                     new String(passField.getPassword())));
@@ -181,21 +182,25 @@ public class uberLoginGUI extends JFrame implements ActionListener{
                     showError("Error de la base de datos.");
                     break;
                 case -3:
-                    showError("Error de conexión con base de datos. Verifica tu conexión a internet y vuelve a intentarlo.");
+                    showError("Error de conexión con base de datos." +
+                            " Verifica tu conexión a internet y vuelve a intentarlo.");
                     break;
                 default:
                     dispose();
                     switch ((String) userTypeBox.getSelectedItem()){
                         case "Cliente":
                             SwingUtilities.invokeLater(() -> {
-                                uberClientGUI uberCCGUI = new uberClientGUI(user_id);
+                                UberClientGUI uberCCGUI = new UberClientGUI(user_id);
                             });
                             break;
                         case "Conductor":
                             SwingUtilities.invokeLater(() -> {
-                                uberDriverGUI uberDGUI = new uberDriverGUI(user_id);
+                                UberDriverGUI uberDGUI = new UberDriverGUI(user_id);
                             });
                             break;
+                        default:
+                            throw new IllegalStateException(
+                                    "Unexpected value: " + userTypeBox.getSelectedItem());
                     }
             }
         }
@@ -214,14 +219,14 @@ public class uberLoginGUI extends JFrame implements ActionListener{
         // Registrarse mejor
         if (e.getSource() == registerButton){
             dispose();
-            uberRegisterGUI uberRGUI = new uberRegisterGUI(null);
+            UberRegisterGUI uberRGUI = new UberRegisterGUI(null);
         }
     }
 
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            uberLoginGUI uberLGUI = new uberLoginGUI(null);
+            UberLoginGUI uberLGUI = new UberLoginGUI(null);
         });
     }
 

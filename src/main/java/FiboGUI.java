@@ -93,12 +93,13 @@ public class FiboGUI extends JFrame implements ActionListener {
         setVisible(true);
     }
 
+    @SuppressWarnings("GrazieInspection")
     public void actionPerformed(ActionEvent event) {
 
-        // Calculo y muestreo de la serie de Fibonacci
+        // Cálculo y muestreo de la serie de Fibonacci
         if (event.getSource() == calcFiboButton || event.getSource() == nField) {
             try {
-                n = Integer.parseInt(nField.getText());// Obtener el número"
+                n = Integer.parseInt(nField.getText());// Obtener el número
             } catch (Exception NumberFormatException) {
                 JOptionPane.showMessageDialog(this, "Error\n\nDebe ser un número entero.");
             }

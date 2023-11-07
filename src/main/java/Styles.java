@@ -139,6 +139,10 @@ public class Styles {
 
         BasicStyles();
 
+        textFieldStyles();
+    }
+
+    private void textFieldStyles() {
         // Fuente para el textfield con su debido color
         for (JTextField textF: this.textFields) {
             if (textF != null) {
@@ -163,6 +167,7 @@ public class Styles {
         this.underlineTitle = underlineTitle;
         this.textFields = textFields;
         BasicStyles(this.dialog, this.dialog.getContentPane());
+        textFieldStyles();
     }
 
     public Styles(JDialog dialog, JLabel titleLabel, JSeparator underlineTitle) {

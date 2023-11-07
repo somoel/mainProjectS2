@@ -134,7 +134,7 @@ public class MainWindow extends JFrame implements ActionListener {
         // Botón Ubernardo
         if (event.getSource() == uberButton){
             setVisible(false);
-            uberLoginGUI uberLGUI = new uberLoginGUI(this);
+            UberLoginGUI uberLGUI = new UberLoginGUI(this);
         }
 
         // Botón Cerrar

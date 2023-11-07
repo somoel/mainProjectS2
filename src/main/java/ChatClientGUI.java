@@ -43,7 +43,7 @@ public class ChatClientGUI extends JFrame implements ActionListener {
                 , "Cliente", JOptionPane.INFORMATION_MESSAGE); // Se pide la IP del servidor
 
 
-        // Creación del socket con la IP del server y los IOs
+        // Creación del socket con la IP del server y los IO
         try {
 
             /* Obtener la IP del cliente para mostrarla en pantalla y

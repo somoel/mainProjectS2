@@ -8,9 +8,9 @@ import java.awt.event.*;
 import java.util.Objects;
 
 /* Ventana para registrarse en Ubernardo
-
+    TODO: Revisar duplicados en la base de datos (correo y teléfono)
  */
-public class uberRegisterGUI extends JFrame implements ActionListener {
+public class UberRegisterGUI extends JFrame implements ActionListener {
 
     private JFrame backFrame;
     private JLabel titleLabel, welcomeLabel, cedulaLabel, passLabel, emailLabel,
@@ -23,7 +23,7 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
     private JComboBox<String> userTypeBox, colorBox;
     private JSeparator separatorTitle;
 
-    public uberRegisterGUI(JFrame backFrame){
+    public UberRegisterGUI(JFrame backFrame){
         this.backFrame = backFrame;
 
         titleLabel = new JLabel("Ubernardo");
@@ -257,7 +257,8 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
             return false;
         }
 
-        if (!email.matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")){
+        String email_regex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        if (!email.matches(email_regex)){
             showError("Ese correo no sirve");
             emailField.setText("");
             return false;
@@ -282,15 +283,24 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         // Registrarse
         if ((e.getSource() == registerButton || e.getSource() == passField) && checkEntrys()){
-            if (operationsCRUD.registerUser(
+            int register_status = OperationsCRUD.registerUser(
                     (String) Objects.requireNonNull(userTypeBox.getSelectedItem()), nameField.getText(),
                     cedulaField.getText(), emailField.getText(), phoneField.getText(), placaField.getText(),
-                    (String) colorBox.getSelectedItem(), new String(passField.getPassword())
-            )){
-                JOptionPane.showMessageDialog(this,
-                        "Listo, se registró rey.", "Hecho", JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                showError("Paila. Pasó algo con la base de datos. Asegúrese de que sí tiene internet.");
+                    (String) colorBox.getSelectedItem(), new String(passField.getPassword()));
+
+            switch (register_status){
+                case 0:
+                    JOptionPane.showMessageDialog(this,
+                            "Listo, se registró rey.", "Hecho", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case -1:
+                    showError("Ups. O ya existía o pasó algo más.");
+                    break;
+                case -2:
+                    showError("Paila. Pasó algo con la base de datos. Asegúrese de que sí tiene internet.");
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + register_status);
             }
         }
 
@@ -305,16 +315,16 @@ public class uberRegisterGUI extends JFrame implements ActionListener {
             }
         }
 
-        // Mejor loguearse
+        // Mejor iniciar sesión
         if (e.getSource() == goToLoginButton){
             dispose();
-            uberLoginGUI uberLGUI = new uberLoginGUI(null);
+            UberLoginGUI uberLGUI = new UberLoginGUI(null);
         }
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            uberRegisterGUI uberRGUI = new uberRegisterGUI(null);
+            UberRegisterGUI uberRGUI = new UberRegisterGUI(null);
         });
     }
 

@@ -8,16 +8,19 @@ Cuadro de diálogo para pedir un servicio de Uber
 /*
 TODO: Cambiar las entradas de texto por Combobox y agregar lógica. @maicolo
  */
-public class uberOrderGUI extends JDialog implements ActionListener {
+public class UberOrderGUI extends JDialog implements ActionListener {
     private JLabel titleLabel, startLabel, endLabel, distanceLabel;
     private JTextField startField, endField, distanceField;
     private JButton orderButton, cancelButton;
     private JSeparator separatorTitle;
+    private int id_client, exit_code;
 
 
     // Constructor
-    public uberOrderGUI(JFrame backFrame){
+    public UberOrderGUI(JFrame backFrame, int id_client){
+
         super(backFrame, "Pedido", true);
+        this.id_client = id_client;
 
         titleLabel = new JLabel("Pidamos eso rápido");
         titleLabel.setBounds(10, 10, 400, 40);
@@ -73,7 +76,7 @@ public class uberOrderGUI extends JDialog implements ActionListener {
 
         // Propios de la ventana
         setLayout(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(430,420);
         setLocationRelativeTo(null);
         setVisible(true);
@@ -113,23 +116,53 @@ public class uberOrderGUI extends JDialog implements ActionListener {
         return true;
     }
 
+    public int getExit_code() {
+        return exit_code;
+    }
+
+    // Evento de los botones
     @Override
     public void actionPerformed(ActionEvent e) {
+        // Crear pedido
         if ((e.getSource() == orderButton || e.getSource() == distanceField) && checkEntrys()){
-            System.out.println("ordenao");
+
+            // Genera el pedido
+            int id_recent_order = OperationsCRUD.createOrder(startField.getText(),
+                    endField.getText(),
+                    Integer.parseInt(distanceField.getText()),
+                    Integer.parseInt(distanceField.getText()) * 7000,
+                    id_client);
+            exit_code = id_recent_order;
+            switch (id_recent_order){
+                case -1:
+                    showError("Error interno", distanceField);
+                    exit_code = 0;
+                    break;
+                case -2:
+                    showError("No se registró el pedido", distanceField);
+                    break;
+                case -3:
+                    showError("Error SQL", distanceField);
+                    break;
+                default:
+                    dispose();
+            }
         }
 
+        // Botón de cancelar
         if (e.getSource() == cancelButton){
             if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this,
                     "¿Estás seguro de que ya no necesitas un servicio?", "¿Seguro?",
-                    JOptionPane.YES_NO_OPTION))
+                    JOptionPane.YES_NO_OPTION)) {
+                exit_code = -4;
                 dispose();
+            }
         }
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            uberOrderGUI uberOGUI = new uberOrderGUI(null);
+            UberOrderGUI uberOGUI = new UberOrderGUI(null, 0);
         });
     }
 }

@@ -6,7 +6,7 @@ import javax.swing.*;
 
     TODO: Falta el cancelar el pedido actual
  */
-public class uberDriverGUI extends JFrame{
+public class UberDriverGUI extends JFrame{
     private String id_driver, nameDriver = "(nombre)", placaUber, colorUber, nameUber, phoneUber,
             inicioViaje, finViaje, kmViaje, costoViaje, horaViaje, fechaViaje;
     private boolean actual_status;
@@ -15,7 +15,7 @@ public class uberDriverGUI extends JFrame{
     private JButton actionButton, logoutButton, closeButton;
 
     // Constructor
-    public uberDriverGUI(String id_driver){
+    public UberDriverGUI(String id_driver){
         this.id_driver = id_driver;
 
         titleLabel = new JLabel("¿Todo bien, " + nameDriver + "?");
@@ -91,7 +91,7 @@ public class uberDriverGUI extends JFrame{
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            uberDriverGUI uberDGUI = new uberDriverGUI("0");
+            UberDriverGUI uberDGUI = new UberDriverGUI("0");
         });
     }
 }
