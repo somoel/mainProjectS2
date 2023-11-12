@@ -1,6 +1,7 @@
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Objects;
 
 /**
  * Se realiza tod0 el CRUD con la base de datos.
@@ -12,9 +13,10 @@ public class OperationsCRUD {
     private static final String URL = "jdbc:mysql://sql10.freesqldatabase.com:3306/sql10659471";
     private static final String USUARIO = "sql10659471";
     private static final String CONTRASENA = "8sX7wd4iRk";
+    private static int conCreated = 0, conClose = 0;
 
     // Conexión con la base de datos.
-    private static Connection con;
+    private static Connection con = getConnection();
 
     // Crea la conexión con la base de datos.
     // TODO: Evitar que se invoque en cada CRUD.
@@ -22,26 +24,16 @@ public class OperationsCRUD {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(URL, USUARIO, CONTRASENA);
+            conCreated++;
+            System.out.println("Conexión NUEVA #" + conCreated);
         } catch (SQLException e) {
             System.out.println("Error al conectar a la base de datos: " + e.getMessage());
         }
         return connection; // Devuelve la conexión
     }
 
-    // Cierra la conexión actual y el ResultSet
-    public static void closeResSetAndCon(ResultSet rs) {
-        try {
-            rs.close();
-            con.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
     // Valida el inicio de sesión
     public static int validateLogin(String userType, String cedula, String password) {
-        // Prepara el query
-        con = getConnection();
         String shortType = userType.substring(0, 3) + "_";
         String id = shortType + "Id";
         String cedCol = shortType + "Cedula";
@@ -75,7 +67,7 @@ public class OperationsCRUD {
                                    String email, String phone, String placa,
                                    String color, String pass) {
         // Preparar la consulta
-        con = getConnection();
+        
         String shortType = userType.substring(0, 3);
 
         String query;
@@ -119,22 +111,31 @@ public class OperationsCRUD {
 
     // Obtiene información del cliente por su ID
     public static ResultSet getClientInfo(String id) {
-        con = getConnection();
+        
         String query = "SELECT * FROM Cliente WHERE Cli_Id = ?";
         return QueryToResultSet(id, query);
     }
 
     // Obtiene información del pedido vigente por ID del cliente.
     public static ResultSet getOrderInfoByClient(String idCli) {
-        con = getConnection();
+        
         String query = "SELECT * FROM Pedido WHERE Cli_Id = ? " +
-                "AND (Ped_Estado != 'Finalizado' AND Ped_Estado != 'Cancelado')";
+                "AND (Ped_Estado != 'Finalizado' AND Ped_Estado != 'CanceladoCon'" +
+                " AND Ped_Estado != 'CanceladoCli')";
         return QueryToResultSet(idCli, query);
+    }
+
+    // Obtiene información del útlimo pedido por ID del conductor.
+    public static ResultSet getOrderInfoByDriver(String idDri) {
+        
+        String query = "SELECT * FROM Pedido WHERE Con_Id = ? " +
+                "ORDER BY CONCAT(Ped_Fecha, ' ', Ped_Hora) DESC LIMIT 1";
+        return QueryToResultSet(idDri, query);
     }
 
     // Obtiene información del conductor por su ID
     public static ResultSet getDriverInfo(String id) {
-        con = getConnection();
+        
         String query = "SELECT * FROM Conductor WHERE Con_Id = ?";
         return QueryToResultSet(id, query);
     }
@@ -160,7 +161,7 @@ public class OperationsCRUD {
     // Crea un pedido
     public static int createOrder(String start, String stop, int distance, int cost, int idCli) {
         // Prepara la consulta
-        con = getConnection();
+        
         // Para agregar el pedido
         String query = "INSERT INTO Pedido" +
                 " (Ped_Hora, Ped_Fecha, Ped_LugarInicio, Ped_LugarLlegada, Ped_Distancia, " +
@@ -210,7 +211,7 @@ public class OperationsCRUD {
     // se puede actualizar para tomado o pedido.
     public static int updateOrderStatusByClient(int cli_ID, String status) {
         // Prepara la consulta
-        con = getConnection();
+        
         String query = "UPDATE Pedido SET Ped_Estado = ? WHERE Cli_Id = ? " +
                 "AND (Ped_Estado != 'Finalizado' OR Ped_Estado != 'Cancelado')";
         String query2 = "UPDATE Cliente SET Cli_Pedido = 0 WHERE Cli_Id = ?";
@@ -230,6 +231,77 @@ public class OperationsCRUD {
             e.printStackTrace();
             return -1; // Si ocurre un SQL error.
         }
+    }
+
+    // Obtiene el ID del cliente por el ID del pedido
+    public static int getClientIdByOrder(int order_ID){
+        String query = "SELECT * FROM Pedido WHERE Ped_Id = ?";
+
+        try {
+            PreparedStatement statement = con.prepareStatement(query);
+            statement.setInt(1, order_ID);
+            ResultSet res = statement.executeQuery();
+            return res.getInt("Cli_Id");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    // Actualiza el estado de una orden por el ID del conductor
+    public static int updateOrderStatusByDriver(int con_ID, int ped_ID, String status) {
+        // Prepara la consulta
+        
+        String query = "UPDATE Pedido SET Ped_Estado = ?, Con_Id = ? WHERE Ped_Id = ?";
+
+        int idClient = getClientIdByOrder(ped_ID);
+        int driverHasOrder, clientHasOrder;
+        if (Objects.equals(status, "Tomado")){
+            driverHasOrder = 1;
+            clientHasOrder = 1;
+        } else {
+            driverHasOrder = 0;
+            clientHasOrder = 0;
+        }
+
+        String query2 = "UPDATE Conductor SET Con_Pedido = ? WHERE Con_Id = ?";
+        String query3 = "UPDATE Cliente SET Cli_Pedido = ? WHERE Cli_Id = ?";
+        try {
+            PreparedStatement statement = con.prepareStatement(query);
+            statement.setString(1, status);
+            statement.setInt(2, con_ID);
+            statement.setInt(3, ped_ID);
+
+            PreparedStatement statement2 = con.prepareStatement(query2);
+            statement2.setInt(1, driverHasOrder);
+            statement2.setInt(2, con_ID);
+            statement2.executeUpdate();
+
+            PreparedStatement statement3 = con.prepareStatement(query3);
+            statement3.setInt(1, clientHasOrder);
+            statement3.setInt(2, idClient);
+            statement3.executeUpdate();
+
+            statement.executeUpdate(); // Ejecuta la consulta
+            return 0; // Si salió bien (está mal esta lógica)
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1; // Si ocurre un SQL error.
+        }
+    }
+
+    // Obtiene todas las órdenes disponibles
+    public static ResultSet getAvaliableOrders(){
+        
+        String query = "SELECT * FROM Pedido WHERE Ped_Estado = 'Pedido'";
+        try {
+            PreparedStatement statement = con.prepareStatement(query);
+            return statement.executeQuery();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
