@@ -73,7 +73,7 @@ public class Styles {
         // Creador del Underline de los títulos.
         if (this.underlineTitle != null) {
             this.underlineTitle.setBounds(0, this.titleLabel.getY() + this.titleLabel.getHeight(),
-                    430, 5);
+                    480, 5);
             underlineTitle.setBorder(BorderFactory.createLineBorder(offOrange, 3));
         }
     }

@@ -27,6 +27,7 @@ public class UberClientGUI extends JFrame implements ActionListener {
     private JSeparator separatorTitle;
     private JButton actionButton, logoutButton, closeButton;
     private ResultSet clientInfo;
+
     private int order_id;
     private ScheduledExecutorService executor;
 
@@ -42,8 +43,6 @@ public class UberClientGUI extends JFrame implements ActionListener {
             hasOrder = Objects.equals(clientInfo.getString("Cli_Pedido"), "1"); // Y su estado actual.
         } catch (SQLException e) {
             dispose(); // TODO: Mostrar un error en pantalla.
-        } finally {
-            OperationsCRUD.closeResSetAndCon(clientInfo); // Cierra la conexión
         }
 
 
@@ -111,8 +110,6 @@ public class UberClientGUI extends JFrame implements ActionListener {
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            OperationsCRUD.closeResSetAndCon(clientInfo); // Cierra conexión.
         }
 
         // Muestra información respecto al pedido
@@ -148,10 +145,11 @@ public class UberClientGUI extends JFrame implements ActionListener {
         try {
             // Obtiene el estado del pedido para ver si está pedido o tomado.
             order_id = order.getInt("Ped_Id");
-            switch (order.getString("Ped_Estado")) {
+            order_status = order.getString("Ped_Estado");
+            switch (order_status) {
                 case "Pedido":
                     order_status = "🚩 Esperando que algún conductor lo tome";
-                    driver_info_formatted = "<p> &nbsp;&nbsp;&nbsp;&nbsp;Luego lo sabrás</p>";
+                    driver_info_formatted = "<p> &nbsp;&nbsp;&nbsp;&nbsp;🕒 Luego lo sabrás</p>";
 
                     break;
                 case "Tomado":
@@ -188,15 +186,10 @@ public class UberClientGUI extends JFrame implements ActionListener {
             end_place = order.getString("Ped_LugarLlegada");
             distance_order = order.getString("Ped_Distancia");
             cost_order = order.getString("Ped_Costo");
-            date_order =
-                    new SimpleDateFormat("d 'de' MMMM").format(order.getDate("Ped_Fecha"));
-            time_order =
-                    new SimpleDateFormat("hh:mm a").format(
-                            new java.util.Date(order.getTime("Ped_Hora").getTime()));
+            date_order = orderDateToString(order);
+            time_order = orderTimeToString(order);
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            OperationsCRUD.closeResSetAndCon(order); // Cierra la conexión
         }
 
         return """
@@ -222,6 +215,16 @@ public class UberClientGUI extends JFrame implements ActionListener {
                 distance_order, cost_order, date_order, time_order);
     }
 
+    // Formatea el tiempo de la orden a String
+    public static String orderTimeToString(ResultSet order) throws SQLException {
+        return new SimpleDateFormat("hh:mm a").format(
+                new java.util.Date(order.getTime("Ped_Hora").getTime()));
+    }
+
+    // Formatea la fecha de la orden a String
+    public static String orderDateToString(ResultSet order) throws SQLException {
+        return new SimpleDateFormat("d 'de' MMMM").format(order.getDate("Ped_Fecha"));
+    }
 
 
     // Evento de botones
@@ -253,6 +256,7 @@ public class UberClientGUI extends JFrame implements ActionListener {
                     break;
 
                 case "Cancelar":
+                    // Asegura la salida
                     int confirmExit =
                         JOptionPane.showConfirmDialog(this, "¿A lo bien ya no lo necesita?",
                                 "¿En serio?", JOptionPane.YES_NO_OPTION);
@@ -306,7 +310,7 @@ public class UberClientGUI extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            UberClientGUI uberCCGUI = new UberClientGUI("3");
+            UberClientGUI uberCCGUI = new UberClientGUI("1");
         });
     }
 }

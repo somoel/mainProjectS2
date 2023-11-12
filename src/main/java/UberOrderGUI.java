@@ -162,7 +162,7 @@ public class UberOrderGUI extends JDialog implements ActionListener {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            UberOrderGUI uberOGUI = new UberOrderGUI(null, 0);
+            UberOrderGUI uberOGUI = new UberOrderGUI(null, 2);
         });
     }
 }
