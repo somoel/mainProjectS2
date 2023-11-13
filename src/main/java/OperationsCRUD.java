@@ -1,3 +1,5 @@
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -66,10 +68,6 @@ public class OperationsCRUD {
     public static int registerUser(String userType, String name, String cedula,
                                    String email, String phone, String placa,
                                    String color, String pass) {
-        // Preparar la consulta
-        
-        String shortType = userType.substring(0, 3);
-
         String query;
 
         // Separa la consulta por Cliente o Conductor
@@ -234,14 +232,21 @@ public class OperationsCRUD {
     }
 
     // Obtiene el ID del cliente por el ID del pedido
-    public static int getClientIdByOrder(int order_ID){
+    public static int getClientIdByOrder(int order_ID) {
         String query = "SELECT * FROM Pedido WHERE Ped_Id = ?";
 
         try {
             PreparedStatement statement = con.prepareStatement(query);
             statement.setInt(1, order_ID);
             ResultSet res = statement.executeQuery();
-            return res.getInt("Cli_Id");
+
+            // Verificar si hay resultados antes de intentar acceder a ellos
+            if (res.next()) {
+                return res.getInt("Cli_Id");
+            } else {
+                // Manejar el caso en que no hay resultados
+                throw new RuntimeException("No se encontró el ID del cliente para el pedido con ID " + order_ID);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -303,6 +308,57 @@ public class OperationsCRUD {
         }
         return null;
     }
+
+    public static void UpdateIp(String userType, int id){
+
+        String ip;
+        try {
+            ip = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+
+        String ip_col = userType.substring(0, 3) + "_Ip";
+        String id_col = userType.substring(0, 3) + "_Id";
+        String query = "UPDATE " + userType + " SET " + ip_col + " = ? WHERE " + id_col + " = ? ";
+
+        try {
+            PreparedStatement statement = con.prepareStatement(query);
+            statement.setString(1, ip);
+            statement.setInt(2, id);
+
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static String getIP(String userType, int id){
+
+        String ip_col = userType.substring(0, 3) + "_Ip";
+        String id_col = userType.substring(0, 3) + "_Id";
+        String query = "SELECT * FROM " + userType + " WHERE " + id_col + " = ?";
+        try {
+            PreparedStatement statement = con.prepareStatement(query);
+            statement.setInt(1, id);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()){
+                return result.getString(ip_col);
+            } else {
+                return null;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 
 
 }

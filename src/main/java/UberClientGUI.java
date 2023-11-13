@@ -21,11 +21,11 @@ import java.util.concurrent.TimeUnit;
      * Guardar datos del Usuario
  */
 public class UberClientGUI extends JFrame implements ActionListener {
-    private String id_client, nameClient;
-    private boolean hasOrder;
+    private String id_client, nameClient, driver_id;
+    private boolean hasAvaliableOrder;
     private JLabel titleLabel, infoLabel;
     private JSeparator separatorTitle;
-    private JButton actionButton, logoutButton, closeButton;
+    private JButton actionButton, logoutButton, closeButton, chatButton;
     private ResultSet clientInfo;
 
     private int order_id;
@@ -40,7 +40,10 @@ public class UberClientGUI extends JFrame implements ActionListener {
             // El nombre también lo obtiene.
             nameClient =
                     Objects.requireNonNull(clientInfo).getString("Cli_Nombre").split("\\s+")[0];
-            hasOrder = Objects.equals(clientInfo.getString("Cli_Pedido"), "1"); // Y su estado actual.
+
+            OperationsCRUD.UpdateIp("Cliente", Integer.parseInt(id_client));
+
+            hasAvaliableOrder = Objects.equals(clientInfo.getString("Cli_Pedido"), "1"); // Y su estado actual.
         } catch (SQLException e) {
             dispose(); // TODO: Mostrar un error en pantalla.
         }
@@ -66,6 +69,11 @@ public class UberClientGUI extends JFrame implements ActionListener {
         infoLabel.setBounds(10, 60, 400, 590);
         add(infoLabel);
 
+        chatButton = new JButton("Chat");
+        chatButton.addActionListener(this);
+        add(chatButton);
+        chatButton.setBounds(10, 655,195, 50);
+
 
         actionButton = new JButton("Cancelar");
         actionButton.addActionListener(this);
@@ -84,6 +92,7 @@ public class UberClientGUI extends JFrame implements ActionListener {
         add(closeButton);
 
         new Styles(this, titleLabel, separatorTitle);
+        remove(chatButton);
 
         // Crea un hilo programado cada 10 segundos con la función UpdateInterface.
         executor = Executors.newSingleThreadScheduledExecutor();
@@ -104,7 +113,7 @@ public class UberClientGUI extends JFrame implements ActionListener {
         try {
             clientInfo = OperationsCRUD.getClientInfo(id_client); // Obtiene de nuevo información del cliente para
             //                                                      conocer su estado actual nuevamente.
-            hasOrder =
+            hasAvaliableOrder =
                     Objects.equals(Objects.requireNonNull(clientInfo).getString("Cli_Pedido"), "1");
             //      Verifica si tiene un pedido actual
 
@@ -113,10 +122,24 @@ public class UberClientGUI extends JFrame implements ActionListener {
         }
 
         // Muestra información respecto al pedido
-        if (hasOrder){
+        if (hasAvaliableOrder){
             infoLabel.setText(formatOrder()); // Muestra la orden
+
+            ResultSet order = OperationsCRUD.getOrderInfoByClient(id_client);
+            String order_status;
+            try {
+                order_status = order.getString("Ped_Estado");
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            if (Objects.equals(order_status, "Tomado")){
+                add(chatButton);
+                actionButton.setBounds(215, 655, 195, 50);
+            }
             actionButton.setText("Cancelar"); // Cambia el nombre del botón de acción
         } else {
+            remove(chatButton);
+            actionButton.setBounds(10, 655, 400, 50);
             infoLabel.setText("""
                     <html>
                         <p style='font-size: 100px; text-align: center;'>🚗❔
@@ -155,7 +178,7 @@ public class UberClientGUI extends JFrame implements ActionListener {
                 case "Tomado":
                     // Agrega información del conductor
                     order_status = "🛣️ Ya va un conductor por tí";
-                    String driver_id = order.getString("Con_Id");
+                    driver_id = order.getString("Con_Id");
                     ResultSet driverInfo = OperationsCRUD.getDriverInfo(driver_id);
                     String placa_driver = driverInfo.getString("Con_Placa");
                     String color_driver = driverInfo.getString("Con_Color");
@@ -240,7 +263,7 @@ public class UberClientGUI extends JFrame implements ActionListener {
                         UberOrderGUI uberOGUI = new UberOrderGUI(this, Integer.parseInt(id_client));
                         int dialog_exit_code = uberOGUI.getExit_code();
                         if (dialog_exit_code != -4) {
-                            hasOrder = true;
+                            hasAvaliableOrder = true;
                             infoLabel.setText("""
                                     <html>
                                         <p style='font-size: 100px; text-align: center;'>✅
@@ -264,7 +287,7 @@ public class UberClientGUI extends JFrame implements ActionListener {
                     if (confirmExit == JOptionPane.YES_OPTION){
                         // Ejecuta la cancelación del pedido.
                         int delete_code = OperationsCRUD.updateOrderStatusByClient(Integer.parseInt(id_client),
-                                "Cancelado");
+                                "CanceladoCli");
                         switch (delete_code){
                             case 0:
                                 JOptionPane.showMessageDialog(this,
@@ -290,6 +313,15 @@ public class UberClientGUI extends JFrame implements ActionListener {
             // Actualiza la interfaz
             updateInterface();
         }
+
+        if (e.getSource() == chatButton){
+            new UberChatHandler(this,
+                    "Cliente",
+                    Integer.parseInt(id_client),
+                    Integer.parseInt(driver_id));
+        }
+
+
 
         // Cerrar sesión
         if (e.getSource() == logoutButton){
